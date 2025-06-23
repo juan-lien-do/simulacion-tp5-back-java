@@ -1,9 +1,10 @@
 package frc.simulacion.elmejorgrupo.tpcinco.model;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class ColaEsperaCobroAuto {
+public class ColaEsperaCobroAuto implements Serializable {
     private Queue<Long> colaIdAuto;
 
     public boolean estaVacia(){

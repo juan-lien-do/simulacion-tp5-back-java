@@ -1,15 +1,21 @@
 package frc.simulacion.elmejorgrupo.tpcinco.model;
 
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
-public class VentanillaCobro {
+import org.springframework.util.SerializationUtils;
+
+import java.io.Serializable;
+
+
+public class VentanillaCobro implements Serializable {
     private ColaEsperaCobroAuto colaEsperaCobroAuto;
     private Boolean estaLibre;
     private Float valorRungeKutta;
     private Float finCobroAuto;
+
+    @Override
+    public VentanillaCobro clone(){
+        return (VentanillaCobro) SerializationUtils.clone(this);
+    }
 
     public void inicializar(){
         this.colaEsperaCobroAuto = new ColaEsperaCobroAuto();
@@ -18,5 +24,37 @@ public class VentanillaCobro {
         this.estaLibre = true;
         this.valorRungeKutta = null;
         this.finCobroAuto = null;
+    }
+
+    public ColaEsperaCobroAuto getColaEsperaCobroAuto() {
+        return colaEsperaCobroAuto;
+    }
+
+    public void setColaEsperaCobroAuto(ColaEsperaCobroAuto colaEsperaCobroAuto) {
+        this.colaEsperaCobroAuto = colaEsperaCobroAuto;
+    }
+
+    public Boolean getEstaLibre() {
+        return estaLibre;
+    }
+
+    public void setEstaLibre(Boolean estaLibre) {
+        this.estaLibre = estaLibre;
+    }
+
+    public Float getValorRungeKutta() {
+        return valorRungeKutta;
+    }
+
+    public void setValorRungeKutta(Float valorRungeKutta) {
+        this.valorRungeKutta = valorRungeKutta;
+    }
+
+    public Float getFinCobroAuto() {
+        return finCobroAuto;
+    }
+
+    public void setFinCobroAuto(Float finCobroAuto) {
+        this.finCobroAuto = finCobroAuto;
     }
 }

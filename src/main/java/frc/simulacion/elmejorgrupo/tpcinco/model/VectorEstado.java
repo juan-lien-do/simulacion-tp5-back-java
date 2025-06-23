@@ -49,7 +49,14 @@ public class VectorEstado {
         this.evento = proxEvento.getKey();
 
         if (evento == Evento.LLEGADA_AUTO){
+            this.gestorLlegadas.calcularLlegada(this.reloj);
+            // hay que ver si la playa esta llena
+            Auto auto = new Auto();
+            if (!prev.esLibrePlaya){
+                //esto es si esta llena la playa
+                contadorAutosAbortados++;
 
+            }
         }
 
     }

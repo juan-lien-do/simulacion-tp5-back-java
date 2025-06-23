@@ -1,12 +1,22 @@
 package frc.simulacion.elmejorgrupo.tpcinco.model;
 
 import frc.simulacion.elmejorgrupo.tpcinco.util.CustomPair;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.util.SerializationUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GestorAutos {
+
+public class GestorAutos implements Serializable {
     public List<Auto> autos;
+
+    @Override
+    public GestorAutos clone(){
+        return (GestorAutos) SerializationUtils.clone(this);
+    }
 
     public void inicializar(){
         this.autos = new ArrayList<>();
@@ -43,5 +53,9 @@ public class GestorAutos {
         }
         return new CustomPair<>(esCobro, horaMasCercana);
 
+    }
+
+    public GestorAutos() {
+        this.autos = new ArrayList<>();
     }
 }

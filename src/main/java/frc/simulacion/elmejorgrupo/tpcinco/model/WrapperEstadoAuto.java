@@ -1,8 +1,9 @@
 package frc.simulacion.elmejorgrupo.tpcinco.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class WrapperEstadoAuto {
+public class WrapperEstadoAuto implements Serializable {
     private EstadoAuto estadoAuto;
     private Long idSector;
 
@@ -27,4 +28,5 @@ public class WrapperEstadoAuto {
             return Objects.equals(this.idSector, idSector);
         } else return false;
     }
+
 }
