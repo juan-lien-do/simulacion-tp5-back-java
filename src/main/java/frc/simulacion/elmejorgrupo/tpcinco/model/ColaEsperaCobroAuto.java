@@ -1,5 +1,6 @@
 package frc.simulacion.elmejorgrupo.tpcinco.model;
 
+import java.util.LinkedList;
 import java.util.Queue;
 
 public class ColaEsperaCobroAuto {
@@ -15,5 +16,9 @@ public class ColaEsperaCobroAuto {
 
     public void agregarAuto(Long idAuto){
         colaIdAuto.add(idAuto);
+    }
+
+    public void inicializar(){
+        this.colaIdAuto = new LinkedList<>();
     }
 }
