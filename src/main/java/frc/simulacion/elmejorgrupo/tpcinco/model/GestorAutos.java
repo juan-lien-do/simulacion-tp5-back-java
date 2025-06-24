@@ -33,7 +33,7 @@ public class GestorAutos implements Serializable {
         for (int i = 0; i < autos.size(); i++){
             Auto aut =autos.get(i);
             if (aut.getEstadoAuto().estoyEnSector()){
-                if (horaMasCercana > aut.getHoraFinEstado()){
+                if (horaMasCercana > aut.getHoraFinEstado() && aut.getHoraFinEstado() > rel){
                     horaMasCercana = aut.getHoraFinEstado();
                 }
             }

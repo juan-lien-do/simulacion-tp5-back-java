@@ -276,7 +276,7 @@ public class VectorEstado {
             // osea que solo hay que esperar al prox auto
             nextHora = this.gestorLlegadas.getHoraLlegadaAuto();
             nextEvento = Evento.LLEGADA_AUTO;
-            //System.out.println("ZONA DECISION EVENTO 1");
+            System.out.println("ZONA DECISION EVENTO 1");
 
         } else if (this.ventanillaCobro.getEstaLibre() && !this.gestorAutos.estaVacia()){
             // si no hay autos en ventanilla pero si llegaron autos antes
@@ -295,7 +295,7 @@ public class VectorEstado {
                 nextHora = horaAutoMasCercana;
                 nextEvento = Evento.FIN_ESTACIONAMIENTO;
             }
-            //System.out.println("ZONA DECISION EVENTO 2");
+            System.out.println("ZONA DECISION EVENTO 2");
 
         } else if (!this.ventanillaCobro.getEstaLibre() && this.gestorAutos.estaVacia()){
             // si hay autos en ventanilla pero no existen autos ?????
@@ -303,27 +303,32 @@ public class VectorEstado {
             System.out.print("ERROR FATAL EN LA SIGUIENTE ITERACION: ");
             System.out.println(this.nroIteracion);
 
-        } else {// si no esta libre la ventanilla pero HAY autos
+        } else {
+            // si no esta libre la ventanilla pero HAY autos
             // hay que tener en cuenta =
             // llegada prox auto,
             // fin de cobro
-            // fin de estacionamiento
+            /// fin de cobro estacionamiento
             Float horaVentanilla = ventanillaCobro.getFinCobroAuto();
 
-            // si es true aca es porque es cobro
-            CustomPair<Boolean, Float> parRespuesta = gestorAutos.horaMasCercanaCobroOEstacionamiento(this.reloj);
+            /// fin de estacionamiento
+            Float finEstacionamiento = gestorAutos.horaMasCercana(this.reloj);
 
-            if(horaVentanilla < parRespuesta.getValue() && horaVentanilla < this.reloj){
+            /// nueva llegada
+            Float horaNuevaLlegada = gestorLlegadas.getHoraLlegadaAuto();
+
+
+            if(horaVentanilla < finEstacionamiento && horaVentanilla < horaNuevaLlegada && horaVentanilla > this.reloj){
                 nextHora = horaVentanilla;
-                nextEvento = Evento.LLEGADA_AUTO;
-            } else if (parRespuesta.getKey()) {
-                nextHora = parRespuesta.getValue();
                 nextEvento = Evento.FIN_COBRO;
-            } else {
-                nextHora = parRespuesta.getValue();
+            } else if (finEstacionamiento < horaNuevaLlegada && finEstacionamiento > this.reloj) {
+                nextHora = finEstacionamiento;
                 nextEvento = Evento.FIN_ESTACIONAMIENTO;
+            } else {
+                nextHora = horaNuevaLlegada;
+                nextEvento = Evento.LLEGADA_AUTO;
             }
-            //System.out.println("ZONA DECISION EVENTO 4");
+            System.out.println("ZONA DECISION EVENTO 4");
         }
 
         // esto es para devolver la hora y el evento a la vez
