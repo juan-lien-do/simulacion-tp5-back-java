@@ -29,8 +29,8 @@ public class Auto implements Serializable {
     }
 
     // para generar nuevo evento
-    public boolean sePuedeTenerEnCuenta(){
-        return estadoAuto.estoyEnSector() || estadoAuto.estoyEnCobro();
+    public boolean sePuedeTenerEnCuenta(Float rel){
+        return (estadoAuto.estoyEnSector() || estadoAuto.estoyEnCobro()) && this.getHoraFinEstado() > rel;
     }
 
     public Long getId() {

@@ -1,13 +1,12 @@
 package frc.simulacion.elmejorgrupo.tpcinco.model;
 
 import frc.simulacion.elmejorgrupo.tpcinco.util.CustomPair;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.util.SerializationUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class GestorAutos implements Serializable {
@@ -29,11 +28,11 @@ public class GestorAutos implements Serializable {
         autos.add(aut);
     }
 
-    public Float horaMasCercana() {
+    public Float horaMasCercana(Float rel) {
         Float horaMasCercana = Float.MAX_VALUE;
         for (int i = 0; i < autos.size(); i++){
             Auto aut =autos.get(i);
-            if (aut.sePuedeTenerEnCuenta()){
+            if (aut.sePuedeTenerEnCuenta(rel)){
                 if (horaMasCercana > aut.getHoraFinEstado()){
                     horaMasCercana = aut.getHoraFinEstado();
                 }
@@ -42,12 +41,12 @@ public class GestorAutos implements Serializable {
         return horaMasCercana;
     }
 
-    public CustomPair<Boolean, Float> horaMasCercanaCobroOEstacionamiento() {
+    public CustomPair<Boolean, Float> horaMasCercanaCobroOEstacionamiento(Float rel) {
         Float horaMasCercana = Float.MAX_VALUE;
-        Boolean esCobro = null;
+        Boolean esCobro = false;
         for (int i = 0; i < autos.size(); i++){
             Auto aut =autos.get(i);
-            if (aut.sePuedeTenerEnCuenta()){
+            if (aut.sePuedeTenerEnCuenta(rel)){
                 if (horaMasCercana > aut.getHoraFinEstado()){
                     horaMasCercana = aut.getHoraFinEstado();
                     esCobro = aut.getEstadoAuto().estoyEnCobro();
@@ -60,5 +59,42 @@ public class GestorAutos implements Serializable {
 
     public GestorAutos() {
         this.autos = new ArrayList<>();
+    }
+
+    /**
+     *
+     * @param reloj
+     * @return Id del sector donde esta estacionado
+     */
+    public Auto buscarAutoFinalizaEstacionamiento(Float reloj) {
+        for (int i = 0; i < this.autos.size() ;i++){
+            Auto aut = this.autos.get(i);
+            if (aut.getEstadoAuto().estoyEnSector() && Objects.equals(aut.getHoraFinEstado(), reloj)){
+                return aut;
+            }
+        }
+        System.out.println("ERROR BUSCANDO AUTO");
+        return this.autos.get(this.autos.size()-1);
+
+    }
+
+    public Auto buscarAutoFinalizaCobro() {
+        for (int i = 0; i < this.autos.size() ;i++){
+            Auto aut = this.autos.get(i);
+            if (aut.getEstadoAuto().estoyEnCobro()){
+                return aut;
+            }
+        }
+        return null;
+    }
+
+    public Auto buscarAutoPorId( Long id) {
+        for (int i = 0; i < this.autos.size() ;i++){
+            Auto aut = this.autos.get(i);
+            if (Objects.equals(aut.getId(), id)){
+                return aut;
+            }
+        }
+        return null;
     }
 }

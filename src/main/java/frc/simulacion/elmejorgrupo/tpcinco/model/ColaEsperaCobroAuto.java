@@ -22,4 +22,8 @@ public class ColaEsperaCobroAuto implements Serializable {
     public void inicializar(){
         this.colaIdAuto = new LinkedList<>();
     }
+
+    public Long conseguirAutosEnCola() {
+        return (long) this.colaIdAuto.size();
+    }
 }

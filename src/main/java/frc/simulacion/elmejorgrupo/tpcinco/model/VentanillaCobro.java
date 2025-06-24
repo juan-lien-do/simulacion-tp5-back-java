@@ -17,6 +17,18 @@ public class VentanillaCobro implements Serializable {
         return (VentanillaCobro) SerializationUtils.clone(this);
     }
 
+    public Long conseguirAutosEnCola(){
+        return colaEsperaCobroAuto.conseguirAutosEnCola();
+    }
+
+    // agregar auto
+    public void agregarAuto(Auto aut){
+        colaEsperaCobroAuto.agregarAuto(aut.getId());
+    }
+
+
+    // getter setter y otros
+
     public void inicializar(){
         this.colaEsperaCobroAuto = new ColaEsperaCobroAuto();
         colaEsperaCobroAuto.inicializar();
@@ -56,5 +68,9 @@ public class VentanillaCobro implements Serializable {
 
     public void setFinCobroAuto(Float finCobroAuto) {
         this.finCobroAuto = finCobroAuto;
+    }
+
+    public Long conseguirAuto() {
+        return colaEsperaCobroAuto.conseguirProximoAuto();
     }
 }

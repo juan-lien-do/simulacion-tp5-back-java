@@ -4,8 +4,10 @@ import org.springframework.util.SerializationUtils;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 public class GestorSectores implements Serializable {
+    public static Long idSectorImportante; // NO MOSTRAR ESTO
     public List<Sector> sectores;
 
     public void inicializar(){
@@ -40,5 +42,13 @@ public class GestorSectores implements Serializable {
             }
         }
         return true;
+    }
+
+    public void liberarSector(Long idSector) {
+        for (int i = 0; i < sectores.size(); i++){
+            if (Objects.equals(sectores.get(i).getIdSector(), idSector)){
+                sectores.get(i).setEsLibre(true);
+            }
+        }
     }
 }

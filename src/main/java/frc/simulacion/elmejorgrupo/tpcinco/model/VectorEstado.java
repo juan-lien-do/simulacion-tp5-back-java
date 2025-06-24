@@ -2,6 +2,10 @@ package frc.simulacion.elmejorgrupo.tpcinco.model;
 
 import frc.simulacion.elmejorgrupo.tpcinco.util.CustomPair;
 
+import java.util.List;
+
+import static frc.simulacion.elmejorgrupo.tpcinco.generadores.GeneradorRungeKutta.calcularYDevolverMatriz;
+
 public class VectorEstado {
 
     private Long nroIteracion;
@@ -12,6 +16,8 @@ public class VectorEstado {
     private GestorSectores gestorSectores;
     private GestorAutos gestorAutos;
     private VentanillaCobro ventanillaCobro;
+    // matriz del RK
+    private List<float[]> matriz;
     // TODO otras cosas
 
     private Long contadorAutosNoAtendidos;
@@ -123,16 +129,100 @@ public class VectorEstado {
             operarNuevaLlegada(nuevoVec);
         } else if (nuevoVec.evento == Evento.FIN_ESTACIONAMIENTO) {
             operarFinEstacionamiento(nuevoVec);
+        } else if (nuevoVec.evento == Evento.FIN_COBRO){
+            operarFinCobro(nuevoVec);
         }
 
         return nuevoVec;
 
     }
 
-    private static void operarFinEstacionamiento(VectorEstado nuevoVec) {
-        
+    private static void operarFinCobro(VectorEstado nuevoVec) {
+        // hay dos caminos:
+        // si la cola tiene items, entonces hay que descontar la cola y calcular el siguiente fin de cobro
+        //      y los estados de LOS autos
+        // si la cola no tiene autos, entonces hay que actualizar el estado de la zona de cobro
+        //      y el estado del auto
+
+        // si la cola no tiene autos / camino facil
+        if (nuevoVec.ventanillaCobro.conseguirAutosEnCola() == 0L){
+            // actualizar estado auto
+            // buscar auto en zona cobro y actualizar
+            Auto aut = nuevoVec.gestorAutos.buscarAutoFinalizaCobro();
+            aut.getEstadoAuto().setEstadoAuto(EstadoAuto.FINALIZADO);
+
+            // actualizar estado zona de cobro
+            nuevoVec.ventanillaCobro.setEstaLibre(true);
+        } else {// camino dificil
+            // actualizar estado auto
+            // buscar auto en zona cobro y actualizar
+            Auto aut = nuevoVec.gestorAutos.buscarAutoFinalizaCobro();
+            aut.getEstadoAuto().setEstadoAuto(EstadoAuto.FINALIZADO);
+
+            // obtener id de prox auto
+            Long idNuevoAuto = nuevoVec.ventanillaCobro.conseguirAuto();
+
+            Auto nuevoAut = nuevoVec.gestorAutos.buscarAutoPorId(idNuevoAuto);
+
+            // calcular runge kutta y actualizar el estado del auto
+            Float paramD = (nuevoAut.getTipoAuto() == TiposAuto.GRANDE) ? 180f : 130f;
+            Float paramC = nuevoVec.ventanillaCobro.conseguirAutosEnCola().floatValue();
+            List<float[]> matriz = calcularYDevolverMatriz(paramD, paramC);
+            // ahora hay que buscar el resultado en la matriz
+            // eso nos va a dar el Xn que apunta al objetivo
+            // el Xn+1 va a estar en el anteultimo elemento de la ultima fila de la lista.
+            Float Xn = matriz.getLast()[7];
+            nuevoVec.ventanillaCobro.setValorRungeKutta(Xn);
+            nuevoVec.ventanillaCobro.setEstaLibre(false);
+            nuevoVec.ventanillaCobro.setFinCobroAuto(nuevoVec.reloj+Xn);
+            nuevoAut.getEstadoAuto().setEstadoAuto(EstadoAuto.EN_COBRO);
+
+
+        }
+
+
     }
 
+    private static void operarFinEstacionamiento(VectorEstado nuevoVec) {
+        // hay que buscar el auto que acaba de finalizar y cambiar el estado
+        // despues de eso hay que actualizar el estado del sector
+        // hay que mandarle el auto a la zona de cobro
+        //      si la zona de cobro esta ocupada, usar la cola
+        //      si esta libre, actualizar su estado, actualizar la hora de fin de cobro de auto
+
+        Auto aut = nuevoVec.gestorAutos.buscarAutoFinalizaEstacionamiento(nuevoVec.reloj);
+        // el proximo estado del auto depende del estado de la cola
+        if (nuevoVec.ventanillaCobro.getEstaLibre()){
+            // calcular runge kutta y actualizar el estado del auto
+            Float paramD = (aut.getTipoAuto() == TiposAuto.GRANDE) ? 180f : 130f;
+            Float paramC = nuevoVec.ventanillaCobro.conseguirAutosEnCola().floatValue();
+            List<float[]> matriz = calcularYDevolverMatriz(paramD, paramC);
+            // ahora hay que buscar el resultado en la matriz
+            // eso nos va a dar el Xn que apunta al objetivo
+            // el Xn+1 va a estar en el anteultimo elemento de la ultima fila de la lista.
+            Float Xn = matriz.getLast()[7];
+            nuevoVec.ventanillaCobro.setValorRungeKutta(Xn);
+            nuevoVec.ventanillaCobro.setEstaLibre(false);
+            nuevoVec.ventanillaCobro.setFinCobroAuto(nuevoVec.reloj+Xn);
+            aut.getEstadoAuto().setEstadoAuto(EstadoAuto.EN_COBRO);
+
+        } else {
+            // esto si esta ocupado: mandarlo a la cola
+            nuevoVec.ventanillaCobro.agregarAuto(aut);
+            // poner que el auto esta en cola
+            aut.getEstadoAuto().setEstadoAuto(EstadoAuto.EN_COLA_COBRO);
+        }
+
+        // actualizar estado sector -> ponerlo como Libre
+        Long idSector = aut.getEstadoAuto().getIdSector();
+        nuevoVec.gestorSectores.liberarSector(idSector);
+
+        nuevoVec.esLibrePlaya = true; // aca actualizamos para que se libere la playa
+
+        // creo que eso es todo
+    }
+
+    //TODO
     public CustomPair<Evento, Float> decidirProximoEvento(){
         Float nextHora = 0f;
         Evento nextEvento = Evento.FIN_SIMULACION;
@@ -147,13 +237,13 @@ public class VectorEstado {
             // si no hay autos en ventanilla pero si llegaron autos antes
             // puede haber fin_estacionamiento y nuevallegada
             // de los autos
-            Float horaAutoMasCercana = this.gestorAutos.horaMasCercana();
+            Float horaAutoMasCercana = this.gestorAutos.horaMasCercana(this.reloj);
 
             //
             Float horaVentanilla = ventanillaCobro.getFinCobroAuto();
             if (horaVentanilla > horaAutoMasCercana){
                 nextHora = horaAutoMasCercana;
-                nextEvento = Evento.FIN_COBRO;
+                nextEvento = Evento.FIN_ESTACIONAMIENTO;
             } else {
                 nextHora = horaVentanilla;
                 nextEvento = Evento.LLEGADA_AUTO;
@@ -173,9 +263,9 @@ public class VectorEstado {
             Float horaVentanilla = ventanillaCobro.getFinCobroAuto();
 
             // si es true aca es porque es cobro
-            CustomPair<Boolean, Float> parRespuesta = gestorAutos.horaMasCercanaCobroOEstacionamiento();
+            CustomPair<Boolean, Float> parRespuesta = gestorAutos.horaMasCercanaCobroOEstacionamiento(this.reloj);
 
-            if(horaVentanilla < parRespuesta.getValue()){
+            if(horaVentanilla < parRespuesta.getValue() && horaVentanilla < this.reloj){
                 nextHora = horaVentanilla;
                 nextEvento = Evento.LLEGADA_AUTO;
             } else if (parRespuesta.getKey()) {
