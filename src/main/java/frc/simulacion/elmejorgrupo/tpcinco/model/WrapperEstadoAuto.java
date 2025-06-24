@@ -3,6 +3,7 @@ package frc.simulacion.elmejorgrupo.tpcinco.model;
 import java.io.Serializable;
 import java.util.Objects;
 
+
 public class WrapperEstadoAuto implements Serializable {
     private EstadoAuto estadoAuto;
     private Long idSector;
@@ -20,7 +21,7 @@ public class WrapperEstadoAuto implements Serializable {
         return this.estadoAuto == EstadoAuto.FINALIZADO;
     }
     public boolean estoyAbortado(){
-        return this.estadoAuto == EstadoAuto.ABORTADO;
+        return this.estadoAuto == EstadoAuto.NO_ATENDIDO;
     }
 
     public boolean estoyEnSectorTal(Long idSector){
@@ -29,4 +30,28 @@ public class WrapperEstadoAuto implements Serializable {
         } else return false;
     }
 
+    public WrapperEstadoAuto(EstadoAuto estadoAuto) {
+        this.estadoAuto = estadoAuto;
+    }
+
+    public WrapperEstadoAuto(EstadoAuto estadoAuto, Long idSector) {
+        this.estadoAuto = estadoAuto;
+        this.idSector = idSector;
+    }
+
+    public EstadoAuto getEstadoAuto() {
+        return estadoAuto;
+    }
+
+    public void setEstadoAuto(EstadoAuto estadoAuto) {
+        this.estadoAuto = estadoAuto;
+    }
+
+    public Long getIdSector() {
+        return idSector;
+    }
+
+    public void setIdSector(Long idSector) {
+        this.idSector = idSector;
+    }
 }

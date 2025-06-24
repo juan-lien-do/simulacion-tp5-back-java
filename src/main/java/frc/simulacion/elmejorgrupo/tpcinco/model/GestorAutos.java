@@ -25,6 +25,10 @@ public class GestorAutos implements Serializable {
         return this.autos.isEmpty();
     }
 
+    public void agregarAutoNoAtendido(Auto aut){
+        autos.add(aut);
+    }
+
     public Float horaMasCercana() {
         Float horaMasCercana = Float.MAX_VALUE;
         for (int i = 0; i < autos.size(); i++){
@@ -37,7 +41,6 @@ public class GestorAutos implements Serializable {
         }
         return horaMasCercana;
     }
-
 
     public CustomPair<Boolean, Float> horaMasCercanaCobroOEstacionamiento() {
         Float horaMasCercana = Float.MAX_VALUE;

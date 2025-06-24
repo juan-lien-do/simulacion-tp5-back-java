@@ -12,6 +12,7 @@ public class Auto implements Serializable {
     private static Long proximaId = 1L;
 
     private Long id;
+    private TiposAuto tipoAuto;
     private WrapperEstadoAuto estadoAuto;
     private Float horaFinEstado;
 
@@ -54,6 +55,14 @@ public class Auto implements Serializable {
 
     public void setHoraFinEstado(Float horaFinEstado) {
         this.horaFinEstado = horaFinEstado;
+    }
+
+    public TiposAuto getTipoAuto() {
+        return tipoAuto;
+    }
+
+    public void setTipoAuto(TiposAuto tipoAuto) {
+        this.tipoAuto = tipoAuto;
     }
 }
 

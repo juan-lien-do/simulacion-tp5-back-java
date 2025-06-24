@@ -5,5 +5,5 @@ public enum EstadoAuto {
     EN_COBRO, // este sirve
     EN_COLA_COBRO,
     FINALIZADO,
-    ABORTADO
+    NO_ATENDIDO
 }

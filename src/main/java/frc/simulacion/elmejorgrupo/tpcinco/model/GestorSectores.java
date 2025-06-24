@@ -20,4 +20,25 @@ public class GestorSectores implements Serializable {
         return (GestorSectores) SerializationUtils.clone(this);
     }
 
+    public Long buscarYOcuparLibre() {
+        Long idLibre = 0L;
+        for (int i = 0; i < sectores.size(); i++){
+            if (sectores.get(i).getEsLibre()){
+                idLibre = sectores.get(i).getIdSector();
+                sectores.get(i).setEsLibre(false);
+                break;
+            }
+        }
+
+        return idLibre;
+    }
+
+    public boolean estaLleno() {
+        for (int i = 0; i < sectores.size(); i++){
+            if(sectores.get(i).getEsLibre()){
+                return false;
+            }
+        }
+        return true;
+    }
 }
