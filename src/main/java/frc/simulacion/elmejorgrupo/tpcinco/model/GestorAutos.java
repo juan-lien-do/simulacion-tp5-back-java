@@ -24,7 +24,7 @@ public class GestorAutos implements Serializable {
         return this.autos.isEmpty();
     }
 
-    public void agregarAutoNoAtendido(Auto aut){
+    public void agregarAuto(Auto aut){
         autos.add(aut);
     }
 
@@ -32,7 +32,7 @@ public class GestorAutos implements Serializable {
         Float horaMasCercana = Float.MAX_VALUE;
         for (int i = 0; i < autos.size(); i++){
             Auto aut =autos.get(i);
-            if (aut.sePuedeTenerEnCuenta(rel)){
+            if (aut.getEstadoAuto().estoyEnSector()){
                 if (horaMasCercana > aut.getHoraFinEstado()){
                     horaMasCercana = aut.getHoraFinEstado();
                 }
@@ -73,7 +73,7 @@ public class GestorAutos implements Serializable {
                 return aut;
             }
         }
-        System.out.println("ERROR BUSCANDO AUTO");
+        System.out.println("ERROR BUSCANDO AUTO CON ID" + reloj);
         return this.autos.get(this.autos.size()-1);
 
     }
@@ -96,5 +96,21 @@ public class GestorAutos implements Serializable {
             }
         }
         return null;
+    }
+
+    public void devolverDatosTexto(StringBuilder sb) {
+        for (int i = 0; i < autos.size(); i++){
+            Auto auto = autos.get(i);
+            sb.append(auto.getId());
+            sb.append(" || ");
+            sb.append(auto.getTipoAuto().name());
+            sb.append(" || ");
+            sb.append(auto.getHoraFinEstado());
+            sb.append(" || ");
+            sb.append(auto.getEstadoAuto().getEstadoAuto());
+            sb.append(" || ");
+            sb.append(auto.getEstadoAuto().getIdSector());
+            sb.append(" || ");
+        }
     }
 }

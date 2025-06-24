@@ -9,7 +9,7 @@ import java.util.List;
 public class SimulationController {
     public static void main(String[] args){
         //pruebaSerialization();
-        iniciarSimulacion(20L, 100L, 0.1f);
+        iniciarSimulacion(50L, 100L, 0.1f);
     }
 
     public static void sillyPrueba(){
@@ -26,13 +26,18 @@ public class SimulationController {
         // primera iteracion
         VectorEstado primerVector = VectorEstado.obtenerVectorInicial();
         vectores.add(primerVector);
+        System.out.println(primerVector.generarTextoPrueba());
         // siguientes iteraciones
         for (long i = 0; i < cantidadIteraciones-1; i++){
-            VectorEstado nuevoVector = VectorEstado.predecirProximoVector(vectores.get((int) i));
+            System.out.println();
+            VectorEstado nuevoVector = VectorEstado.predecirProximoVector(vectores.get(vectores.size()-1));
             vectores.add(nuevoVector);
             // aca transformamos el vector choto este en un array
-
-
+            /// TODO VISUALIZAR VECTOR
+            System.out.println(nuevoVector.generarTextoPrueba());
+            if (vectores.size() > 301){
+                vectores.remove(300);
+            }
         }
         return null;
     }

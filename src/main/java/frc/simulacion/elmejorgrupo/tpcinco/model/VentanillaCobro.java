@@ -73,4 +73,12 @@ public class VentanillaCobro implements Serializable {
     public Long conseguirAuto() {
         return colaEsperaCobroAuto.conseguirProximoAuto();
     }
+
+    public void devolverDatosTexto(StringBuilder sb) {
+        sb.append(this.estaLibre);
+        sb.append(" || ");
+        sb.append(this.valorRungeKutta);
+        sb.append(" || ");
+        sb.append(this.finCobroAuto);
+    }
 }

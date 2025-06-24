@@ -15,12 +15,12 @@ public class VectorEstado {
     private GestorLlegadas gestorLlegadas;
     private GestorSectores gestorSectores;
     private GestorAutos gestorAutos;
-    private VentanillaCobro ventanillaCobro;
+    private VentanillaCobro ventanillaCobro ;
     // matriz del RK
     private List<float[]> matriz;
     // TODO otras cosas
 
-    private Long contadorAutosNoAtendidos;
+    private Long contadorAutosNoAtendidos = 0L;
     private Float acumuladorGanancia;
     private Float acumuladorTiempoEstacionamiento;
 
@@ -28,29 +28,61 @@ public class VectorEstado {
     public VectorEstado() {
     }
 
+    // metodo para conseguir una lista que visualice el vector
+    // orden: datos iniciales, gestor llegada, ventanilla de cobro,
+    // gestor sectores, gestor autos
+    /// HACER ESTO PORQUE ES IMPORTANTE
+    public String generarTextoPrueba(){
+        // generamos un texto y le vamos adosando los valores que queremos...
+        StringBuilder sb = new StringBuilder();
+        sb.append("|| ");
+        sb.append(this.nroIteracion);
+        sb.append("|| ");
+        sb.append(this.evento.name());
+        sb.append("|| ");
+        sb.append(this.reloj);
+        sb.append("|| ");
+        sb.append(this.esLibrePlaya);
+        sb.append("\n|| GESTORLLEGADAS");
+        sb.append("|| ");
+        this.gestorLlegadas.devolverDatosTexto(sb);
+        sb.append("\n|| ZONACOBRO");
+        sb.append("|| ");
+        this.ventanillaCobro.devolverDatosTexto(sb);
+        sb.append("\n|| GESTORSECTORES");
+        sb.append("|| ");
+        this.gestorSectores.devolverDatosTexto(sb);
+        sb.append("\n|| GESTORAUTOS");
+        sb.append("|| ");
+        this.gestorAutos.devolverDatosTexto(sb);
+        sb.append("\n|| ACUMULADORES || ");
+        sb.append(this.contadorAutosNoAtendidos);
+        return sb.toString();
+    }
+
     // metodo para conseguir el vector inicial inicial
     public static VectorEstado obtenerVectorInicial() {
-        VectorEstado porFavorApruebenos = new VectorEstado();
+        VectorEstado vecInicial = new VectorEstado();
 
-        porFavorApruebenos.nroIteracion = 1L;
-        porFavorApruebenos.evento = Evento.INICIO_SIMULACION;
-        porFavorApruebenos.reloj = 0f;
+        vecInicial.nroIteracion = 1L;
+        vecInicial.evento = Evento.INICIO_SIMULACION;
+        vecInicial.reloj = 0f;
 
         // parte de los generadores
-        porFavorApruebenos.gestorLlegadas = new GestorLlegadas();
-        porFavorApruebenos.gestorLlegadas.calcularLlegada(porFavorApruebenos.reloj);
+        vecInicial.gestorLlegadas = new GestorLlegadas();
+        vecInicial.gestorLlegadas.calcularLlegada(vecInicial.reloj);
 
-        porFavorApruebenos.esLibrePlaya = true;
+        vecInicial.esLibrePlaya = true;
 
-        porFavorApruebenos.gestorSectores = new GestorSectores();
-        porFavorApruebenos.gestorSectores.inicializar();
+        vecInicial.gestorSectores = new GestorSectores();
+        vecInicial.gestorSectores.inicializar();
 
-        porFavorApruebenos.ventanillaCobro = new VentanillaCobro();
-        porFavorApruebenos.ventanillaCobro.inicializar();
+        vecInicial.ventanillaCobro = new VentanillaCobro();
+        vecInicial.ventanillaCobro.inicializar();
 
-        porFavorApruebenos.gestorAutos = new GestorAutos();
-        porFavorApruebenos.gestorAutos.inicializar();
-        return porFavorApruebenos;
+        vecInicial.gestorAutos = new GestorAutos();
+        vecInicial.gestorAutos.inicializar();
+        return vecInicial;
     }
 
     public static VectorEstado obtenerCopia(VectorEstado vec){
@@ -61,6 +93,9 @@ public class VectorEstado {
         nuevoVec.evento = vec.evento;
         nuevoVec.reloj = vec.reloj;
         nuevoVec.esLibrePlaya = vec.esLibrePlaya;
+
+        // acumuladores
+        nuevoVec.contadorAutosNoAtendidos = vec.contadorAutosNoAtendidos;
 
         // valores por referencia
         nuevoVec.gestorLlegadas = vec.gestorLlegadas.clone();
@@ -82,12 +117,17 @@ public class VectorEstado {
 
         auto.setTipoAuto(nuevoTipo);
         // hay que ver si la playa esta llena
+        if (vector.gestorSectores.estaLleno()){
+            System.out.println("XD");
+        }
+
         if (!vector.esLibrePlaya){
             // si la playa esta llena el auto se va -> modificar el auto
             auto.setEstadoAuto(new WrapperEstadoAuto(EstadoAuto.NO_ATENDIDO));
-            vector.gestorAutos.agregarAutoNoAtendido(auto);
+            vector.gestorAutos.agregarAuto(auto);
             // actualizar contador
             vector.contadorAutosNoAtendidos++;
+            System.out.println("aca hay uno sin atender");
         } else {
             // calcular tiempo del estacionamiento, obtener id de un sector libre,
             // asignar ese auto en ese sector libre, si llego a los 10 sectores ocupados entonces hay que actualizar
@@ -102,6 +142,12 @@ public class VectorEstado {
             if (vector.gestorSectores.estaLleno()){
                 vector.esLibrePlaya = false;
             }
+            if (!vector.esLibrePlaya){
+                System.out.println(vector.nroIteracion);
+            }
+            // agregar el auto al gestor
+            vector.gestorAutos.agregarAuto(auto);
+
         }
 
         // se calcula la nueva llegada
@@ -110,7 +156,7 @@ public class VectorEstado {
         return vector;
         /*
         * TODO
-        * Calcular el resto acumuladores si es necesario
+        * Calcular el resto de acumuladores si es necesario
         * */
     }
 
@@ -122,6 +168,7 @@ public class VectorEstado {
 
         // TODO hacer lo que falta
         CustomPair<Evento, Float> proxEvento = prev.decidirProximoEvento();
+        nuevoVec.nroIteracion = prev.nroIteracion+1;
         nuevoVec.reloj = proxEvento.getValue();
         nuevoVec.evento = proxEvento.getKey();
 
@@ -171,15 +218,12 @@ public class VectorEstado {
             // ahora hay que buscar el resultado en la matriz
             // eso nos va a dar el Xn que apunta al objetivo
             // el Xn+1 va a estar en el anteultimo elemento de la ultima fila de la lista.
-            Float Xn = matriz.getLast()[7];
+            Float Xn = matriz.get(matriz.size()-1)[7];
             nuevoVec.ventanillaCobro.setValorRungeKutta(Xn);
             nuevoVec.ventanillaCobro.setEstaLibre(false);
             nuevoVec.ventanillaCobro.setFinCobroAuto(nuevoVec.reloj+Xn);
             nuevoAut.getEstadoAuto().setEstadoAuto(EstadoAuto.EN_COBRO);
-
-
         }
-
 
     }
 
@@ -200,7 +244,7 @@ public class VectorEstado {
             // ahora hay que buscar el resultado en la matriz
             // eso nos va a dar el Xn que apunta al objetivo
             // el Xn+1 va a estar en el anteultimo elemento de la ultima fila de la lista.
-            Float Xn = matriz.getLast()[7];
+            Float Xn = matriz.get(matriz.size()-1)[7];
             nuevoVec.ventanillaCobro.setValorRungeKutta(Xn);
             nuevoVec.ventanillaCobro.setEstaLibre(false);
             nuevoVec.ventanillaCobro.setFinCobroAuto(nuevoVec.reloj+Xn);
@@ -232,26 +276,30 @@ public class VectorEstado {
             // osea que solo hay que esperar al prox auto
             nextHora = this.gestorLlegadas.getHoraLlegadaAuto();
             nextEvento = Evento.LLEGADA_AUTO;
+            //System.out.println("ZONA DECISION EVENTO 1");
 
         } else if (this.ventanillaCobro.getEstaLibre() && !this.gestorAutos.estaVacia()){
             // si no hay autos en ventanilla pero si llegaron autos antes
             // puede haber fin_estacionamiento y nuevallegada
             // de los autos
+
+            // fin de estacionamiento mas cercano
             Float horaAutoMasCercana = this.gestorAutos.horaMasCercana(this.reloj);
 
-            //
-            Float horaVentanilla = ventanillaCobro.getFinCobroAuto();
-            if (horaVentanilla > horaAutoMasCercana){
+            // llegada mas cercana
+            Float horaLlegadaAuto = gestorLlegadas.getHoraLlegadaAuto();
+            if (horaLlegadaAuto < horaAutoMasCercana){
+                nextHora = horaLlegadaAuto;
+                nextEvento = Evento.LLEGADA_AUTO;
+            } else {
                 nextHora = horaAutoMasCercana;
                 nextEvento = Evento.FIN_ESTACIONAMIENTO;
-            } else {
-                nextHora = horaVentanilla;
-                nextEvento = Evento.LLEGADA_AUTO;
             }
+            //System.out.println("ZONA DECISION EVENTO 2");
 
         } else if (!this.ventanillaCobro.getEstaLibre() && this.gestorAutos.estaVacia()){
             // si hay autos en ventanilla pero no existen autos ?????
-            // wtf esto no deberia pasar
+            // esto no debe pasar
             System.out.print("ERROR FATAL EN LA SIGUIENTE ITERACION: ");
             System.out.println(this.nroIteracion);
 
@@ -275,6 +323,7 @@ public class VectorEstado {
                 nextHora = parRespuesta.getValue();
                 nextEvento = Evento.FIN_ESTACIONAMIENTO;
             }
+            //System.out.println("ZONA DECISION EVENTO 4");
         }
 
         // esto es para devolver la hora y el evento a la vez

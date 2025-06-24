@@ -21,6 +21,22 @@ public class GestorLlegadas implements Serializable {
         return (GestorLlegadas) SerializationUtils.clone(this);
     }
 
+    public void devolverDatosTexto(StringBuilder sb){
+        sb.append(rndLlegadaAuto);
+        sb.append("|| ");
+        sb.append(tiempoLlegadaAuto);
+        sb.append("|| ");
+        sb.append(horaLlegadaAuto);
+        sb.append("|| ");
+        sb.append(rndTipoAuto);
+        sb.append("|| ");
+        sb.append(tipoAuto.name());
+        sb.append("|| ");
+        sb.append(rndTiempo);
+        sb.append("|| ");
+        sb.append(tiempoEstacionamiento);
+    }
+
     // llegada
     public void calcularLlegada(Float reloj){
         this.rndLlegadaAuto = GeneradorNumAleat.generarNumeroAleatorio();

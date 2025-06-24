@@ -14,6 +14,7 @@ public class Generador {
     }
 
     public static Float generarTiempoLlegadaAuto(Float RND){
+        //RND/=10; esto fuerza que aparezcan autos sin atender
         return (float) (-13f * Math.log(1-RND));
     }
 

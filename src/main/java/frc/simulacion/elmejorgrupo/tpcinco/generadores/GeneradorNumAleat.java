@@ -1,7 +1,7 @@
 package frc.simulacion.elmejorgrupo.tpcinco.generadores;
 
 public class GeneradorNumAleat {
-    public static Long nextNumber = 1L;
+    public static Long nextNumber = 9L;
     public static final Long g = 14L;
     public static final Long m = (long) Math.pow(2L, g);
     public final Long k = 5L;
@@ -12,25 +12,5 @@ public class GeneradorNumAleat {
         return (float) nextNumber / (m - 1);
     }
 
-    public static void main(String[] args){
-        // pruebas;
-        System.out.println(generarNumeroAleatorio());
-        System.out.println(generarNumeroAleatorio());
-        System.out.println(generarNumeroAleatorio());
-        System.out.println(generarNumeroAleatorio());
-        System.out.println(generarNumeroAleatorio());
-        System.out.println(generarNumeroAleatorio());
-        System.out.println(generarNumeroAleatorio());
-        System.out.println(generarNumeroAleatorio());
-        System.out.println(generarNumeroAleatorio());
-        System.out.println(generarNumeroAleatorio());
-        System.out.println(generarNumeroAleatorio());
-        System.out.println(generarNumeroAleatorio());
-        System.out.println(generarNumeroAleatorio());
-        System.out.println(generarNumeroAleatorio());
-        System.out.println(generarNumeroAleatorio());
-        System.out.println(generarNumeroAleatorio());
-        System.out.println(generarNumeroAleatorio());
-        System.out.println(generarNumeroAleatorio());
-    }
+
 }
