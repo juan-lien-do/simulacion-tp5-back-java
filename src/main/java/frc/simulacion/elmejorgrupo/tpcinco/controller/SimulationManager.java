@@ -40,5 +40,29 @@ public class SimulationManager {
         return vectores;
     }
 
+    public static List<VectorEstado> iniciarSimulacion(Long cantidadIteraciones, Long parametroT, Float saltoH, Long filaDesde, Long filaHasta) {
+        List<VectorEstado> vectores = new LinkedList<>();
+
+        // Configuración de la RK
+        GeneradorRungeKutta.configurarTyH((float) parametroT, saltoH);
+
+        // Primera iteración
+        VectorEstado vectorActual = VectorEstado.obtenerVectorInicial();
+
+        for (long i = 0; i < cantidadIteraciones; i++) {
+            // Guardar el vector si está dentro del rango o si es la última fila
+            if ((i >= filaDesde && i <= filaHasta) || i == cantidadIteraciones - 1) {
+                vectores.add(vectorActual);
+            }
+
+            // Predecir el siguiente vector para la próxima iteración
+            if (i < cantidadIteraciones - 1) {
+                vectorActual = VectorEstado.predecirProximoVector(vectorActual);
+            }
+        }
+
+        return vectores;
+    }
+
 
 }
