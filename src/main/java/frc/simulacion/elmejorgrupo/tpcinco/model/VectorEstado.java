@@ -164,9 +164,7 @@ public class VectorEstado {
 
         // acumuladores
         nuevoVec.contadorAutosNoAtendidos = vec.contadorAutosNoAtendidos;
-
-        /// importante= aca aumentamos el acumulador de tiempo si es que estaba ocupado
-
+        nuevoVec.acumuladorGanancia = vec.acumuladorGanancia;
         nuevoVec.acumuladorTiempoEstacionamiento = vec.acumuladorTiempoEstacionamiento;
 
 
@@ -193,6 +191,7 @@ public class VectorEstado {
         TiposAuto nuevoTipo = vector.gestorLlegadas.getTipoAuto();
 
         auto.setTipoAuto(nuevoTipo);
+        auto.setHoraLlegada(vector.reloj);
         // hay que ver si la playa esta llena
         if (vector.gestorSectores.estaLleno()){
             //System.out.println("XD");
@@ -300,6 +299,7 @@ public class VectorEstado {
             Float paramC = nuevoVec.ventanillaCobro.conseguirAutosEnCola().floatValue();
             List<float[]> matriz = calcularYDevolverMatriz(paramD, paramC);
             nuevoVec.matriz = matriz;
+
             // ahora hay que buscar el resultado en la matriz
             // eso nos va a dar el Xn que apunta al objetivo
             // el Xn+1 va a estar en el anteultimo elemento de la ultima fila de la lista.
@@ -308,6 +308,19 @@ public class VectorEstado {
             nuevoVec.ventanillaCobro.setEstaLibre(false);
             nuevoVec.ventanillaCobro.setFinCobroAuto(nuevoVec.reloj+Xn);
             nuevoAut.getEstadoAuto().setEstadoAuto(EstadoAuto.EN_COBRO);
+
+            /// TODO PROGRAMAR EL ACUMULADOR DE PLATA
+            float dinero = 0f;
+            float diferencia = aut.getHoraFinEstado() - aut.getHoraLlegada();
+            if (aut.getTipoAuto() == TiposAuto.PEQUENIO){
+                dinero = (diferencia / 60f) * 300f;
+            } else if (aut.getTipoAuto() == TiposAuto.GRANDE){
+                dinero = (diferencia / 60f) * 500f;
+            } else {
+                dinero = (diferencia / 60f) * 500f;
+            }
+            nuevoVec.acumuladorGanancia += dinero;
+
         }
 
     }
@@ -326,6 +339,7 @@ public class VectorEstado {
             Float paramD = (aut.getTipoAuto() == TiposAuto.GRANDE) ? 180f : 130f;
             Float paramC = nuevoVec.ventanillaCobro.conseguirAutosEnCola().floatValue();
             List<float[]> matriz = calcularYDevolverMatriz(paramD, paramC);
+
             nuevoVec.matriz = matriz;
             // ahora hay que buscar el resultado en la matriz
             // eso nos va a dar el Xn que apunta al objetivo
@@ -335,6 +349,19 @@ public class VectorEstado {
             nuevoVec.ventanillaCobro.setEstaLibre(false);
             nuevoVec.ventanillaCobro.setFinCobroAuto(nuevoVec.reloj+Xn);
             aut.getEstadoAuto().setEstadoAuto(EstadoAuto.EN_COBRO);
+            /// TODO PROGRAMAR EL ACUMULADOR DE PLATA
+            /// necesito el auto, el acumulador, hora de inicio y hora de fin
+            float dinero = 0f;
+            float diferencia = aut.getHoraFinEstado() - aut.getHoraLlegada();
+            if (aut.getTipoAuto() == TiposAuto.PEQUENIO){
+                dinero = (diferencia / 60f) * 300f;
+            } else if (aut.getTipoAuto() == TiposAuto.GRANDE){
+                dinero = (diferencia / 60f) * 500f;
+            } else {
+                dinero = (diferencia / 60f) * 500f;
+            }
+            nuevoVec.acumuladorGanancia += dinero;
+
 
         } else {
             // esto si esta ocupado: mandarlo a la cola

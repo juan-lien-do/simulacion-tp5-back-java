@@ -15,6 +15,7 @@ public class Auto implements Serializable {
     private Long id;
     private TiposAuto tipoAuto;
     private WrapperEstadoAuto estadoAuto;
+    private Float horaLlegada;
     private Float horaFinEstado;
 
     public static Long generarId(){
@@ -68,6 +69,14 @@ public class Auto implements Serializable {
 
     public void setTipoAuto(TiposAuto tipoAuto) {
         this.tipoAuto = tipoAuto;
+    }
+
+    public Float getHoraLlegada() {
+        return horaLlegada;
+    }
+
+    public void setHoraLlegada(Float horaLlegada) {
+        this.horaLlegada = horaLlegada;
     }
 }
 
