@@ -11,6 +11,7 @@ import lombok.Setter;
 public class Auto implements Serializable {
     private static Long proximaId = 1L;
 
+
     private Long id;
     private TiposAuto tipoAuto;
     private WrapperEstadoAuto estadoAuto;
@@ -22,6 +23,10 @@ public class Auto implements Serializable {
 
     public Auto(){
         this.id = generarId();
+    }
+
+    public static void reiniciarIdIncremental(){
+        proximaId = 1L;
     }
 
     public boolean estoyEnSectorTal(Long idSector){

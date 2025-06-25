@@ -1,6 +1,7 @@
 package frc.simulacion.elmejorgrupo.tpcinco.controller;
 
 import frc.simulacion.elmejorgrupo.tpcinco.generadores.GeneradorRungeKutta;
+import frc.simulacion.elmejorgrupo.tpcinco.model.Auto;
 import frc.simulacion.elmejorgrupo.tpcinco.model.VectorEstado;
 
 import java.util.LinkedList;
@@ -45,6 +46,8 @@ public class SimulationManager {
 
         // Configuración de la RK
         GeneradorRungeKutta.configurarTyH((float) parametroT, saltoH);
+        // Configuracion de ids
+        Auto.reiniciarIdIncremental();
 
         // Primera iteración
         VectorEstado vectorActual = VectorEstado.obtenerVectorInicial();

@@ -86,7 +86,7 @@ public class VectorEstado {
                     })
                     .collect(Collectors.toList());
             dto.setAutoDTOS(autosDTO);
-            dto.setAutosEnCola((long) this.gestorAutos.getAutos().size()); //
+            dto.setAutosEnCola((long) this.ventanillaCobro.conseguirAutosEnCola()); //
         }
 
         return dto;
