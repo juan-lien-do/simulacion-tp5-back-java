@@ -19,6 +19,6 @@ public class CustomPair<K, V> {
 
     public static void main(String[] args) {
         CustomPair<Integer, String> customPair = new CustomPair<>(1, "One");
-        System.out.println("Key: " + customPair.getKey() + ", Value: " + customPair.getValue());
+        //System.out.println("Key: " + customPair.getKey() + ", Value: " + customPair.getValue());
     }
 }

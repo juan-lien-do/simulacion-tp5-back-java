@@ -1,46 +1,22 @@
 package frc.simulacion.elmejorgrupo.tpcinco.controller;
 
-import frc.simulacion.elmejorgrupo.tpcinco.generadores.GeneradorRungeKutta;
-import frc.simulacion.elmejorgrupo.tpcinco.model.VectorEstado;
-
-import java.util.LinkedList;
 import java.util.List;
+import frc.simulacion.elmejorgrupo.tpcinco.ElementoListaDTO;
+import frc.simulacion.elmejorgrupo.tpcinco.web.SimulationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.Mapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 
+@RestController
 public class SimulationController {
-    public static void main(String[] args){
-        //pruebaSerialization();
-        iniciarSimulacion(50L, 100L, 0.1f);
+    @Autowired
+    public SimulationService simulationService;
+
+    @GetMapping("/simular/{cantidadIteraciones}/{parametroT}/{saltoH}/")
+    public ResponseEntity<List<ElementoListaDTO>> Simular(@PathVariable Long cantidadIteraciones, @PathVariable Long parametroT, @PathVariable Float saltoH){
+        return ResponseEntity.ok(simulationService.iniciarSimulacion(cantidadIteraciones, parametroT, saltoH));
     }
-
-    public static void sillyPrueba(){
-        System.out.println(Math.log(Math.E));
-    }
-
-    public static Object iniciarSimulacion(Long cantidadIteraciones, Long parametroT, Float saltoH){
-        List<VectorEstado> vectores = new LinkedList<>();
-        /*
-        CONFIGURACION DE LA RK
-                 */
-        GeneradorRungeKutta.configurarTyH((float) parametroT, saltoH);
-
-        // primera iteracion
-        VectorEstado primerVector = VectorEstado.obtenerVectorInicial();
-        vectores.add(primerVector);
-        System.out.println(primerVector.generarTextoPrueba());
-        // siguientes iteraciones
-        for (long i = 0; i < cantidadIteraciones-1; i++){
-            System.out.println();
-            VectorEstado nuevoVector = VectorEstado.predecirProximoVector(vectores.get(vectores.size()-1));
-            vectores.add(nuevoVector);
-            // aca transformamos el vector choto este en un array
-            /// TODO VISUALIZAR VECTOR
-            System.out.println(nuevoVector.generarTextoPrueba());
-            if (vectores.size() > 301){
-                vectores.remove(300);
-            }
-        }
-        return null;
-    }
-
-
 }

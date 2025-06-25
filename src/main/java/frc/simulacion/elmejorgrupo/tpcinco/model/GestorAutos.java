@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 public class GestorAutos implements Serializable {
@@ -22,6 +23,18 @@ public class GestorAutos implements Serializable {
     }
     public boolean estaVacia(){
         return this.autos.isEmpty();
+    }
+
+    public void purgar() {
+        List<Auto> purgados = new ArrayList<>();
+        for (Auto auto : autos) {
+            if (auto.getEstadoAuto().estoyEnSector()
+                    || auto.getEstadoAuto().estoyEnCobro()
+                    || auto.getEstadoAuto().estoyEnColaCobro()) {
+                purgados.add(auto);
+            }
+        }
+        this.autos = purgados;
     }
 
     public void agregarAuto(Auto aut){
@@ -73,7 +86,7 @@ public class GestorAutos implements Serializable {
                 return aut;
             }
         }
-        System.out.println("ERROR BUSCANDO AUTO CON ID" + reloj);
+        //System.out.println("ERROR BUSCANDO AUTO CON ID" + reloj);
         return this.autos.get(this.autos.size()-1);
 
     }
@@ -98,6 +111,7 @@ public class GestorAutos implements Serializable {
         return null;
     }
 
+    // esto no hace falta optimizarlo
     public void devolverDatosTexto(StringBuilder sb) {
         for (int i = 0; i < autos.size(); i++){
             Auto auto = autos.get(i);
@@ -112,5 +126,13 @@ public class GestorAutos implements Serializable {
             sb.append(auto.getEstadoAuto().getIdSector());
             sb.append(" || ");
         }
+    }
+
+    public List<Auto> getAutos() {
+        return autos;
+    }
+
+    public void setAutos(List<Auto> autos) {
+        this.autos = autos;
     }
 }

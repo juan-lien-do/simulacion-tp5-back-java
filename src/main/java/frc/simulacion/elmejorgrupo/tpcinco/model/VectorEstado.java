@@ -1,8 +1,12 @@
 package frc.simulacion.elmejorgrupo.tpcinco.model;
 
+import frc.simulacion.elmejorgrupo.tpcinco.DTO.AutoDTO;
+import frc.simulacion.elmejorgrupo.tpcinco.ElementoListaDTO;
 import frc.simulacion.elmejorgrupo.tpcinco.util.CustomPair;
+import frc.simulacion.elmejorgrupo.tpcinco.util.SectorDTO;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static frc.simulacion.elmejorgrupo.tpcinco.generadores.GeneradorRungeKutta.calcularYDevolverMatriz;
 
@@ -23,6 +27,70 @@ public class VectorEstado {
     private Long contadorAutosNoAtendidos = 0L;
     private Float acumuladorGanancia;
     private Float acumuladorTiempoEstacionamiento;
+
+    public ElementoListaDTO toDTO() {
+        ElementoListaDTO dto = new ElementoListaDTO();
+
+        // Mapeo de atributos simples
+        dto.setNroIteracion(this.nroIteracion);
+        dto.setEvento(this.evento != null ? this.evento.name() : null);
+        dto.setReloj(this.reloj);
+        dto.setEsLibre(this.esLibrePlaya);
+        dto.setMatriz(this.matriz);
+        dto.setContadorAutosNoAtendidos(this.contadorAutosNoAtendidos);
+        dto.setAcumuladorGanancia(this.acumuladorGanancia);
+        dto.setAcumuladorTiempoEstacionamiento(this.acumuladorTiempoEstacionamiento);
+
+        // Mapeo de GestorLlegadas
+        if (this.gestorLlegadas != null) {
+            dto.setRndLlegadaAuto(this.gestorLlegadas.getRndLlegadaAuto());
+            dto.setTiempoLlegadaAuto(this.gestorLlegadas.getTiempoLlegadaAuto());
+            dto.setHoraLlegadaAuto(this.gestorLlegadas.getHoraLlegadaAuto());
+            dto.setRndTipoAuto(this.gestorLlegadas.getRndTipoAuto());
+            dto.setTipoAuto(this.gestorLlegadas.getTipoAuto() != null ? this.gestorLlegadas.getTipoAuto().name() : null);
+            dto.setRndTiempo(this.gestorLlegadas.getRndTiempo());
+            dto.setTiempoEstacionamiento(this.gestorLlegadas.getTiempoEstacionamiento());
+        }
+
+        // Mapeo de VentanillaCobro
+        if (this.ventanillaCobro != null) {
+            dto.setEstaLibre(this.ventanillaCobro.getEstaLibre());
+            dto.setValorRungeKutta(this.ventanillaCobro.getValorRungeKutta());
+            dto.setFinCobroAuto(this.ventanillaCobro.getFinCobroAuto());
+        }
+
+        // Mapeo de GestorSectores a SectorDTO
+        if (this.gestorSectores != null && this.gestorSectores.getSectores() != null) {
+            List<SectorDTO> sectoresDTO = this.gestorSectores.getSectores().stream()
+                    .map(sector -> {
+                        SectorDTO sectorDTO = new SectorDTO();
+                        sectorDTO.setId(sector.getIdSector());
+                        sectorDTO.setEsLibre(sector.getEsLibre());
+                        return sectorDTO;
+                    })
+                    .collect(Collectors.toList());
+            dto.setSectorDTOS(sectoresDTO);
+        }
+
+        // Mapeo de GestorAutos a AutoDTO
+        if (this.gestorAutos != null && this.gestorAutos.getAutos() != null) {
+            List<AutoDTO> autosDTO = this.gestorAutos.getAutos().stream()
+                    .map(auto -> {
+                        AutoDTO autoDTO = new AutoDTO();
+                        autoDTO.setId(auto.getId());
+                        autoDTO.setTipoAuto(auto.getTipoAuto() != null ? auto.getTipoAuto().name() : null);
+                        autoDTO.setEstadoAuto(auto.getEstadoAuto() != null ? auto.getEstadoAuto().getEstadoAuto().name() : null);
+                        autoDTO.setHoraFinEstacionamiento(auto.getHoraFinEstado());
+                        autoDTO.setIdSector(auto.getEstadoAuto() != null ? auto.getEstadoAuto().getIdSector() : null);
+                        return autoDTO;
+                    })
+                    .collect(Collectors.toList());
+            dto.setAutoDTOS(autosDTO);
+            dto.setAutosEnCola((long) this.gestorAutos.getAutos().size()); //
+        }
+
+        return dto;
+    }
 
     // constructor vacio
     public VectorEstado() {
@@ -106,6 +174,10 @@ public class VectorEstado {
 
         nuevoVec.gestorAutos = vec.gestorAutos.clone();
 
+        // esto es para optimizar
+        nuevoVec.gestorAutos.purgar();
+
+
         return nuevoVec;
     }
 
@@ -118,7 +190,7 @@ public class VectorEstado {
         auto.setTipoAuto(nuevoTipo);
         // hay que ver si la playa esta llena
         if (vector.gestorSectores.estaLleno()){
-            System.out.println("XD");
+            //System.out.println("XD");
         }
 
         if (!vector.esLibrePlaya){
@@ -127,7 +199,7 @@ public class VectorEstado {
             vector.gestorAutos.agregarAuto(auto);
             // actualizar contador
             vector.contadorAutosNoAtendidos++;
-            System.out.println("aca hay uno sin atender");
+            //System.out.println("aca hay uno sin atender");
         } else {
             // calcular tiempo del estacionamiento, obtener id de un sector libre,
             // asignar ese auto en ese sector libre, si llego a los 10 sectores ocupados entonces hay que actualizar
@@ -143,7 +215,7 @@ public class VectorEstado {
                 vector.esLibrePlaya = false;
             }
             if (!vector.esLibrePlaya){
-                System.out.println(vector.nroIteracion);
+                //System.out.println(vector.nroIteracion);
             }
             // agregar el auto al gestor
             vector.gestorAutos.agregarAuto(auto);
@@ -169,6 +241,7 @@ public class VectorEstado {
         // TODO hacer lo que falta
         CustomPair<Evento, Float> proxEvento = prev.decidirProximoEvento();
         nuevoVec.nroIteracion = prev.nroIteracion+1;
+        System.out.println(nuevoVec.nroIteracion);
         nuevoVec.reloj = proxEvento.getValue();
         nuevoVec.evento = proxEvento.getKey();
 
@@ -215,6 +288,7 @@ public class VectorEstado {
             Float paramD = (nuevoAut.getTipoAuto() == TiposAuto.GRANDE) ? 180f : 130f;
             Float paramC = nuevoVec.ventanillaCobro.conseguirAutosEnCola().floatValue();
             List<float[]> matriz = calcularYDevolverMatriz(paramD, paramC);
+            nuevoVec.matriz = matriz;
             // ahora hay que buscar el resultado en la matriz
             // eso nos va a dar el Xn que apunta al objetivo
             // el Xn+1 va a estar en el anteultimo elemento de la ultima fila de la lista.
@@ -241,6 +315,7 @@ public class VectorEstado {
             Float paramD = (aut.getTipoAuto() == TiposAuto.GRANDE) ? 180f : 130f;
             Float paramC = nuevoVec.ventanillaCobro.conseguirAutosEnCola().floatValue();
             List<float[]> matriz = calcularYDevolverMatriz(paramD, paramC);
+            nuevoVec.matriz = matriz;
             // ahora hay que buscar el resultado en la matriz
             // eso nos va a dar el Xn que apunta al objetivo
             // el Xn+1 va a estar en el anteultimo elemento de la ultima fila de la lista.
@@ -276,7 +351,7 @@ public class VectorEstado {
             // osea que solo hay que esperar al prox auto
             nextHora = this.gestorLlegadas.getHoraLlegadaAuto();
             nextEvento = Evento.LLEGADA_AUTO;
-            System.out.println("ZONA DECISION EVENTO 1");
+            //System.out.println("ZONA DECISION EVENTO 1");
 
         } else if (this.ventanillaCobro.getEstaLibre() && !this.gestorAutos.estaVacia()){
             // si no hay autos en ventanilla pero si llegaron autos antes
@@ -295,7 +370,7 @@ public class VectorEstado {
                 nextHora = horaAutoMasCercana;
                 nextEvento = Evento.FIN_ESTACIONAMIENTO;
             }
-            System.out.println("ZONA DECISION EVENTO 2");
+            //System.out.println("ZONA DECISION EVENTO 2");
 
         } else if (!this.ventanillaCobro.getEstaLibre() && this.gestorAutos.estaVacia()){
             // si hay autos en ventanilla pero no existen autos ?????
@@ -328,7 +403,7 @@ public class VectorEstado {
                 nextHora = horaNuevaLlegada;
                 nextEvento = Evento.LLEGADA_AUTO;
             }
-            System.out.println("ZONA DECISION EVENTO 4");
+            //System.out.println("ZONA DECISION EVENTO 4");
         }
 
         // esto es para devolver la hora y el evento a la vez
@@ -348,5 +423,101 @@ public class VectorEstado {
         this.acumuladorGanancia = acumuladorGanancia;
         this.acumuladorTiempoEstacionamiento = acumuladorTiempoEstacionamiento;
         // creo q este metodo esta al vicio pero bueno que le vamos a hacer
+    }
+
+    public Long getNroIteracion() {
+        return nroIteracion;
+    }
+
+    public void setNroIteracion(Long nroIteracion) {
+        this.nroIteracion = nroIteracion;
+    }
+
+    public Evento getEvento() {
+        return evento;
+    }
+
+    public void setEvento(Evento evento) {
+        this.evento = evento;
+    }
+
+    public Float getReloj() {
+        return reloj;
+    }
+
+    public void setReloj(Float reloj) {
+        this.reloj = reloj;
+    }
+
+    public Boolean getEsLibrePlaya() {
+        return esLibrePlaya;
+    }
+
+    public void setEsLibrePlaya(Boolean esLibrePlaya) {
+        this.esLibrePlaya = esLibrePlaya;
+    }
+
+    public GestorLlegadas getGestorLlegadas() {
+        return gestorLlegadas;
+    }
+
+    public void setGestorLlegadas(GestorLlegadas gestorLlegadas) {
+        this.gestorLlegadas = gestorLlegadas;
+    }
+
+    public GestorSectores getGestorSectores() {
+        return gestorSectores;
+    }
+
+    public void setGestorSectores(GestorSectores gestorSectores) {
+        this.gestorSectores = gestorSectores;
+    }
+
+    public GestorAutos getGestorAutos() {
+        return gestorAutos;
+    }
+
+    public void setGestorAutos(GestorAutos gestorAutos) {
+        this.gestorAutos = gestorAutos;
+    }
+
+    public VentanillaCobro getVentanillaCobro() {
+        return ventanillaCobro;
+    }
+
+    public void setVentanillaCobro(VentanillaCobro ventanillaCobro) {
+        this.ventanillaCobro = ventanillaCobro;
+    }
+
+    public List<float[]> getMatriz() {
+        return matriz;
+    }
+
+    public void setMatriz(List<float[]> matriz) {
+        this.matriz = matriz;
+    }
+
+    public Long getContadorAutosNoAtendidos() {
+        return contadorAutosNoAtendidos;
+    }
+
+    public void setContadorAutosNoAtendidos(Long contadorAutosNoAtendidos) {
+        this.contadorAutosNoAtendidos = contadorAutosNoAtendidos;
+    }
+
+    public Float getAcumuladorGanancia() {
+        return acumuladorGanancia;
+    }
+
+    public void setAcumuladorGanancia(Float acumuladorGanancia) {
+        this.acumuladorGanancia = acumuladorGanancia;
+    }
+
+    public Float getAcumuladorTiempoEstacionamiento() {
+        return acumuladorTiempoEstacionamiento;
+    }
+
+    public void setAcumuladorTiempoEstacionamiento(Float acumuladorTiempoEstacionamiento) {
+        this.acumuladorTiempoEstacionamiento = acumuladorTiempoEstacionamiento;
     }
 }

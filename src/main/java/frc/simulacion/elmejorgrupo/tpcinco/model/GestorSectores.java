@@ -62,4 +62,12 @@ public class GestorSectores implements Serializable {
             sb.append(" || ");
         }
     }
+
+    public List<Sector> getSectores() {
+        return sectores;
+    }
+
+    public void setSectores(List<Sector> sectores) {
+        this.sectores = sectores;
+    }
 }

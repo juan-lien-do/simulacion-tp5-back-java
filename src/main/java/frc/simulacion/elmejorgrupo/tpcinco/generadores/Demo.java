@@ -19,7 +19,7 @@ public class Demo {
 
         // --- FIN DE LA SECCIÓN DE PARÁMETROS ---
 
-        System.out.println("--- Solucionador RK4 hasta alcanzar un valor meta ---");
+        //System.out.println("--- Solucionador RK4 hasta alcanzar un valor meta ---");
 
         // 1. Definir la EDO
         EcuacionDiferencial miEcuacion = (t, d) -> (float) (constanteC + 0.6f * constanteT + Math.pow(t, 2f));
@@ -27,18 +27,10 @@ public class Demo {
         // 2. Instanciar nuestro solucionador
         SolucionadorRK4 miSolucionador = new SolucionadorRK4();
 
-        // 3. Resumir el problema
-        System.out.println("\n--- Resumen del Problema ---");
-        System.out.printf("  EDO: dD/dt = %.2f + 0.6 * %.2f + t^2\n", constanteC, constanteT);
-        System.out.printf("  Condición Inicial: D(%.2f) = %.2f\n", t_inicial, d_inicial);
-        System.out.printf("  Objetivo: Detenerse cuando D >= %.1f\n", d_meta);
-
         // 4. Llamar al nuevo método del solucionador
         List<float[]> matrizFinal = miSolucionador.resolverHastaValor(miEcuacion, t_inicial, d_inicial, d_meta, paso_h);
 
         // 5. Presentar el resultado final
-        System.out.println("\n--- RESULTADO FINAL ---");
         //System.out.printf("  Se alcanzó la meta en el tiempo t ≈ %.4f\n", t_final);
-        System.out.println(Arrays.toString(matrizFinal.get(matrizFinal.size()-1)));
     }
 }

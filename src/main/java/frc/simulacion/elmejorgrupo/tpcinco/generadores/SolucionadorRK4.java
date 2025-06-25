@@ -50,7 +50,7 @@ public class SolucionadorRK4 {
 
 
         if(paso >= MAX_PASOS) {
-            System.out.println("\nADVERTENCIA: Se alcanzó el número máximo de pasos.");
+            //System.out.println("\nADVERTENCIA: Se alcanzó el número máximo de pasos.");
         }
 
 
