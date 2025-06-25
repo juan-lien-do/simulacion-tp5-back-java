@@ -25,8 +25,8 @@ public class VectorEstado {
     // TODO otras cosas
 
     private Long contadorAutosNoAtendidos = 0L;
-    private Float acumuladorGanancia;
-    private Float acumuladorTiempoEstacionamiento;
+    private Float acumuladorGanancia = 0f;
+    private Float acumuladorTiempoEstacionamiento = 0f;
 
     public ElementoListaDTO toDTO() {
         ElementoListaDTO dto = new ElementoListaDTO();
@@ -165,6 +165,11 @@ public class VectorEstado {
         // acumuladores
         nuevoVec.contadorAutosNoAtendidos = vec.contadorAutosNoAtendidos;
 
+        /// importante= aca aumentamos el acumulador de tiempo si es que estaba ocupado
+
+        nuevoVec.acumuladorTiempoEstacionamiento = vec.acumuladorTiempoEstacionamiento;
+
+
         // valores por referencia
         nuevoVec.gestorLlegadas = vec.gestorLlegadas.clone();
 
@@ -238,12 +243,18 @@ public class VectorEstado {
         // copiamos y hacemos clonacion del vector anterior.
         nuevoVec = obtenerCopia(prev);
 
-        // TODO hacer lo que falta
         CustomPair<Evento, Float> proxEvento = prev.decidirProximoEvento();
         nuevoVec.nroIteracion = prev.nroIteracion+1;
-        System.out.println(nuevoVec.nroIteracion);
         nuevoVec.reloj = proxEvento.getValue();
         nuevoVec.evento = proxEvento.getKey();
+
+
+        // calcular acumulado de tiempo ocupado de la playa
+        if (!prev.esLibrePlaya){
+            nuevoVec.acumuladorTiempoEstacionamiento += nuevoVec.reloj - prev.reloj;
+        }
+
+        System.out.println(nuevoVec.nroIteracion);
 
         if (nuevoVec.evento == Evento.LLEGADA_AUTO){
             operarNuevaLlegada(nuevoVec);
