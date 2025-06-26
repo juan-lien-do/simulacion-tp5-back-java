@@ -23,6 +23,7 @@ public class VectorEstado {
     // matriz del RK
     private List<float[]> matriz;
     // TODO otras cosas
+    private Float dineroACobrar;
 
     private Long contadorAutosNoAtendidos = 0L;
     private Float acumuladorGanancia = 0f;
@@ -37,6 +38,7 @@ public class VectorEstado {
         dto.setReloj(this.reloj);
         dto.setEsLibre(this.esLibrePlaya);
         dto.setMatriz(this.matriz);
+        dto.setDineroACobrar(this.dineroACobrar);
         dto.setContadorAutosNoAtendidos(this.contadorAutosNoAtendidos);
         dto.setAcumuladorGanancia(this.acumuladorGanancia);
         dto.setAcumuladorTiempoEstacionamiento(this.acumuladorTiempoEstacionamiento);
@@ -166,7 +168,7 @@ public class VectorEstado {
         nuevoVec.contadorAutosNoAtendidos = vec.contadorAutosNoAtendidos;
         nuevoVec.acumuladorGanancia = vec.acumuladorGanancia;
         nuevoVec.acumuladorTiempoEstacionamiento = vec.acumuladorTiempoEstacionamiento;
-
+        nuevoVec.dineroACobrar = vec.dineroACobrar;
 
         // valores por referencia
         nuevoVec.gestorLlegadas = vec.gestorLlegadas.clone();
@@ -283,6 +285,10 @@ public class VectorEstado {
 
             // actualizar estado zona de cobro
             nuevoVec.ventanillaCobro.setEstaLibre(true);
+            // actualizar acumulador ganancia
+            nuevoVec.acumuladorGanancia += nuevoVec.dineroACobrar;
+            nuevoVec.dineroACobrar = 0f;
+
         } else {// camino dificil
             // actualizar estado auto
             // buscar auto en zona cobro y actualizar
@@ -309,6 +315,13 @@ public class VectorEstado {
             nuevoVec.ventanillaCobro.setFinCobroAuto(nuevoVec.reloj+Xn);
             nuevoAut.getEstadoAuto().setEstadoAuto(EstadoAuto.EN_COBRO);
 
+
+            // aca el bugfix es facil:
+            // hay que poner que el dinero se guarde como un atributo del vector de estado, despues en cada fin de cobro sumar el
+            // dinero que quedo antes
+
+
+            nuevoVec.acumuladorGanancia += nuevoVec.dineroACobrar;
             /// TODO PROGRAMAR EL ACUMULADOR DE PLATA
             float dinero = 0f;
             float diferencia = aut.getHoraFinEstado() - aut.getHoraLlegada();
@@ -319,7 +332,7 @@ public class VectorEstado {
             } else {
                 dinero = (diferencia / 60f) * 500f;
             }
-            nuevoVec.acumuladorGanancia += dinero;
+            nuevoVec.dineroACobrar = dinero;
 
         }
 
@@ -349,6 +362,9 @@ public class VectorEstado {
             nuevoVec.ventanillaCobro.setEstaLibre(false);
             nuevoVec.ventanillaCobro.setFinCobroAuto(nuevoVec.reloj+Xn);
             aut.getEstadoAuto().setEstadoAuto(EstadoAuto.EN_COBRO);
+
+
+
             /// TODO PROGRAMAR EL ACUMULADOR DE PLATA
             /// necesito el auto, el acumulador, hora de inicio y hora de fin
             float dinero = 0f;
@@ -360,7 +376,7 @@ public class VectorEstado {
             } else {
                 dinero = (diferencia / 60f) * 500f;
             }
-            nuevoVec.acumuladorGanancia += dinero;
+            nuevoVec.dineroACobrar = dinero;
 
 
         } else {
@@ -557,5 +573,13 @@ public class VectorEstado {
 
     public void setAcumuladorTiempoEstacionamiento(Float acumuladorTiempoEstacionamiento) {
         this.acumuladorTiempoEstacionamiento = acumuladorTiempoEstacionamiento;
+    }
+
+    public Float getDineroACobrar() {
+        return dineroACobrar;
+    }
+
+    public void setDineroACobrar(Float dineroACobrar) {
+        this.dineroACobrar = dineroACobrar;
     }
 }

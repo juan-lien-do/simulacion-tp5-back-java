@@ -28,6 +28,7 @@ public class ElementoListaDTO {
     private Boolean estaLibre;
     private Float valorRungeKutta;
     private Float finCobroAuto;
+    private Float dineroACobrar;
 
     private Long contadorAutosNoAtendidos;
     private Float acumuladorGanancia;
@@ -199,5 +200,13 @@ public class ElementoListaDTO {
 
     public void setAcumuladorTiempoEstacionamiento(Float acumuladorTiempoEstacionamiento) {
         this.acumuladorTiempoEstacionamiento = acumuladorTiempoEstacionamiento;
+    }
+
+    public Float getDineroACobrar() {
+        return dineroACobrar;
+    }
+
+    public void setDineroACobrar(Float dineroACobrar) {
+        this.dineroACobrar = dineroACobrar;
     }
 }

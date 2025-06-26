@@ -1,5 +1,6 @@
 package frc.simulacion.elmejorgrupo.tpcinco.controller;
 
+import frc.simulacion.elmejorgrupo.tpcinco.generadores.GeneradorNumAleat;
 import frc.simulacion.elmejorgrupo.tpcinco.generadores.GeneradorRungeKutta;
 import frc.simulacion.elmejorgrupo.tpcinco.model.Auto;
 import frc.simulacion.elmejorgrupo.tpcinco.model.VectorEstado;
@@ -48,6 +49,8 @@ public class SimulationManager {
         GeneradorRungeKutta.configurarTyH((float) parametroT, saltoH);
         // Configuracion de ids
         Auto.reiniciarIdIncremental();
+        // configuracion num aleat
+        GeneradorNumAleat.reiniciarAleat();;
 
         // Primera iteración
         VectorEstado vectorActual = VectorEstado.obtenerVectorInicial();

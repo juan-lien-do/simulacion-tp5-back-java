@@ -12,5 +12,7 @@ public class GeneradorNumAleat {
         return (float) nextNumber / (m - 1);
     }
 
-
+    public static void reiniciarAleat(){
+        nextNumber = 9L;
+    }
 }
