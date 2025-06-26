@@ -209,4 +209,5 @@ public class ElementoListaDTO {
     public void setDineroACobrar(Float dineroACobrar) {
         this.dineroACobrar = dineroACobrar;
     }
+
 }

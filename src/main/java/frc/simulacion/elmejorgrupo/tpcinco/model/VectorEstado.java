@@ -14,6 +14,7 @@ public class VectorEstado {
 
     private Long nroIteracion;
     private Evento evento;
+    private Long idAutoEvento;
     private Float reloj = 0f;
     private Boolean esLibrePlaya;
     private GestorLlegadas gestorLlegadas;
@@ -34,7 +35,9 @@ public class VectorEstado {
 
         // Mapeo de atributos simples
         dto.setNroIteracion(this.nroIteracion);
-        dto.setEvento(this.evento != null ? this.evento.name() : null);
+        // para evento sera un poco mas complejo
+        dto.setEvento(this.evento == Evento.INICIO_SIMULACION ? this.evento.name() : this.evento.name()+ " " +this.idAutoEvento.toString());
+
         dto.setReloj(this.reloj);
         dto.setEsLibre(this.esLibrePlaya);
         dto.setMatriz(this.matriz);
@@ -192,6 +195,8 @@ public class VectorEstado {
         Auto auto = new Auto();
         TiposAuto nuevoTipo = vector.gestorLlegadas.getTipoAuto();
 
+        vector.idAutoEvento = auto.getId();
+
         auto.setTipoAuto(nuevoTipo);
         auto.setHoraLlegada(vector.reloj);
         // hay que ver si la playa esta llena
@@ -282,6 +287,7 @@ public class VectorEstado {
             // buscar auto en zona cobro y actualizar
             Auto aut = nuevoVec.gestorAutos.buscarAutoFinalizaCobro();
             aut.getEstadoAuto().setEstadoAuto(EstadoAuto.FINALIZADO);
+            nuevoVec.idAutoEvento = aut.getId();
 
             // actualizar estado zona de cobro
             nuevoVec.ventanillaCobro.setEstaLibre(true);
@@ -294,6 +300,7 @@ public class VectorEstado {
             // buscar auto en zona cobro y actualizar
             Auto aut = nuevoVec.gestorAutos.buscarAutoFinalizaCobro();
             aut.getEstadoAuto().setEstadoAuto(EstadoAuto.FINALIZADO);
+            nuevoVec.idAutoEvento = aut.getId();
 
             // obtener id de prox auto
             Long idNuevoAuto = nuevoVec.ventanillaCobro.conseguirAuto();
@@ -346,6 +353,9 @@ public class VectorEstado {
         //      si esta libre, actualizar su estado, actualizar la hora de fin de cobro de auto
 
         Auto aut = nuevoVec.gestorAutos.buscarAutoFinalizaEstacionamiento(nuevoVec.reloj);
+        nuevoVec.idAutoEvento = aut.getId();
+
+        nuevoVec.idAutoEvento = aut.getId();
         // el proximo estado del auto depende del estado de la cola
         if (nuevoVec.ventanillaCobro.getEstaLibre()){
             // calcular runge kutta y actualizar el estado del auto
