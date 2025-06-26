@@ -1,7 +1,7 @@
 package frc.simulacion.elmejorgrupo.tpcinco.generadores;
 
 public class GeneradorNumAleat {
-    public static Long nextNumber = 9L;
+    public static Long nextNumber = 5000000000L;
     public static final Long g = 24L;
     public static final Long m = (long) Math.pow(2L, g);
     public final Long k = 5L;
@@ -13,6 +13,6 @@ public class GeneradorNumAleat {
     }
 
     public static void reiniciarAleat(){
-        nextNumber = 9L;
+        nextNumber = 5000000000L;
     }
 }
