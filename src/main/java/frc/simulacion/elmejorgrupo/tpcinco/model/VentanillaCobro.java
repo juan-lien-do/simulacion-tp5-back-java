@@ -9,8 +9,8 @@ import java.io.Serializable;
 public class VentanillaCobro implements Serializable {
     private ColaEsperaCobroAuto colaEsperaCobroAuto;
     private Boolean estaLibre;
-    private Float valorRungeKutta;
-    private Float finCobroAuto;
+    private Double valorRungeKutta;
+    private Double finCobroAuto;
 
     @Override
     public VentanillaCobro clone(){
@@ -54,19 +54,19 @@ public class VentanillaCobro implements Serializable {
         this.estaLibre = estaLibre;
     }
 
-    public Float getValorRungeKutta() {
+    public Double getValorRungeKutta() {
         return valorRungeKutta;
     }
 
-    public void setValorRungeKutta(Float valorRungeKutta) {
+    public void setValorRungeKutta(Double valorRungeKutta) {
         this.valorRungeKutta = valorRungeKutta;
     }
 
-    public Float getFinCobroAuto() {
+    public Double getFinCobroAuto() {
         return finCobroAuto;
     }
 
-    public void setFinCobroAuto(Float finCobroAuto) {
+    public void setFinCobroAuto(Double finCobroAuto) {
         this.finCobroAuto = finCobroAuto;
     }
 

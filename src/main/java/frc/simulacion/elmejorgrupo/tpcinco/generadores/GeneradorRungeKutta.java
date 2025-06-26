@@ -4,20 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GeneradorRungeKutta {
-    public static Float paramT;
-    public static Float saltoH;
+    public static Double paramT;
+    public static Double saltoH;
 
-    public static final Float Xo = 0f;
-    public static final Float Yo = 0f;
+    public static final Double Xo = 0.0;
+    public static final Double Yo = 0.0;
 
-    public static void configurarTyH(Float parametroT, Float saltoH){
+    public static void configurarTyH(Double parametroT, Double saltoH){
         GeneradorRungeKutta.saltoH = saltoH;
         GeneradorRungeKutta.paramT = parametroT;
     }
 
     // siento que estoy cometiendo crimenes contra la programacion
-    public static List<float[]> calcularYDevolverMatriz(float paramD, float paramC){
-        EcuacionDiferencial miEcuacion = (t, d) -> (float) (paramC + 0.6f * paramT + Math.pow(t, 2f));
+    public static List<double[]> calcularYDevolverMatriz(Double paramD, Double paramC){
+        EcuacionDiferencial miEcuacion = (t, d) -> (Double) (paramC + 0.6f * paramT + Math.pow(t, 2f));
 
         SolucionadorRK4 miSolucionador = new SolucionadorRK4();
 

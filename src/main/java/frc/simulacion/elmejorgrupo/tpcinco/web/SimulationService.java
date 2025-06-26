@@ -9,7 +9,7 @@ import java.util.List;
 
 @Service
 public class SimulationService {
-    public List<ElementoListaDTO> iniciarSimulacion(Long cantidadIteraciones, Long parametroT, Float saltoH, Long filaDesde, Long filaHasta){
+    public List<ElementoListaDTO> iniciarSimulacion(Long cantidadIteraciones, Long parametroT, Double saltoH, Long filaDesde, Long filaHasta){
         List<VectorEstado> respuesta = SimulationManager.iniciarSimulacion(cantidadIteraciones, parametroT, saltoH, filaDesde, filaHasta);
 
         return respuesta.stream().map(VectorEstado::toDTO).toList();

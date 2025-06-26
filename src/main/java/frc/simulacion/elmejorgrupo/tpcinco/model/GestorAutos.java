@@ -41,8 +41,8 @@ public class GestorAutos implements Serializable {
         autos.add(aut);
     }
 
-    public Float horaMasCercana(Float rel) {
-        Float horaMasCercana = Float.MAX_VALUE;
+    public Double horaMasCercana(Double rel) {
+        Double horaMasCercana = Double.MAX_VALUE;
         for (int i = 0; i < autos.size(); i++){
             Auto aut =autos.get(i);
             if (aut.getEstadoAuto().estoyEnSector()){
@@ -54,8 +54,8 @@ public class GestorAutos implements Serializable {
         return horaMasCercana;
     }
 
-    public CustomPair<Boolean, Float> horaMasCercanaCobroOEstacionamiento(Float rel) {
-        Float horaMasCercana = Float.MAX_VALUE;
+    public CustomPair<Boolean, Double> horaMasCercanaCobroOEstacionamiento(Double rel) {
+        Double horaMasCercana = Double.MAX_VALUE;
         Boolean esCobro = false;
         for (int i = 0; i < autos.size(); i++){
             Auto aut =autos.get(i);
@@ -79,7 +79,7 @@ public class GestorAutos implements Serializable {
      * @param reloj
      * @return Id del sector donde esta estacionado
      */
-    public Auto buscarAutoFinalizaEstacionamiento(Float reloj) {
+    public Auto buscarAutoFinalizaEstacionamiento(Double reloj) {
         for (int i = 0; i < this.autos.size() ;i++){
             Auto aut = this.autos.get(i);
             if (aut.getEstadoAuto().estoyEnSector() && Objects.equals(aut.getHoraFinEstado(), reloj)){

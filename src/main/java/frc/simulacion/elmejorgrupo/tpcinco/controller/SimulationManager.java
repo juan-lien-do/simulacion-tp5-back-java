@@ -11,17 +11,17 @@ import java.util.List;
 public class SimulationManager {
     public static void main(String[] args){
         //pruebaSerialization();
-        iniciarSimulacion(50L, 100L, 0.1f);
+        iniciarSimulacion(50L, 100L, 0.1);
     }
 
 
 
-    public static List<VectorEstado> iniciarSimulacion(Long cantidadIteraciones, Long parametroT, Float saltoH){
+    public static List<VectorEstado> iniciarSimulacion(Long cantidadIteraciones, Long parametroT, Double saltoH){
         List<VectorEstado> vectores = new LinkedList<>();
         /*
         CONFIGURACION DE LA RK
                  */
-        GeneradorRungeKutta.configurarTyH((float) parametroT, saltoH);
+        GeneradorRungeKutta.configurarTyH((double) parametroT, saltoH);
 
         // primera iteracion
         VectorEstado primerVector = VectorEstado.obtenerVectorInicial();
@@ -42,11 +42,11 @@ public class SimulationManager {
         return vectores;
     }
 
-    public static List<VectorEstado> iniciarSimulacion(Long cantidadIteraciones, Long parametroT, Float saltoH, Long filaDesde, Long filaHasta) {
+    public static List<VectorEstado> iniciarSimulacion(Long cantidadIteraciones, Long parametroT, Double saltoH, Long filaDesde, Long filaHasta) {
         List<VectorEstado> vectores = new LinkedList<>();
 
         // Configuración de la RK
-        GeneradorRungeKutta.configurarTyH((float) parametroT, saltoH);
+        GeneradorRungeKutta.configurarTyH((double) parametroT, saltoH);
         // Configuracion de ids
         Auto.reiniciarIdIncremental();
         // configuracion num aleat

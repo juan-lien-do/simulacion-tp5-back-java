@@ -15,20 +15,20 @@ public class VectorEstado {
     private Long nroIteracion;
     private Evento evento;
     private Long idAutoEvento;
-    private Float reloj = 0f;
+    private Double reloj = 0.0;
     private Boolean esLibrePlaya;
     private GestorLlegadas gestorLlegadas;
     private GestorSectores gestorSectores;
     private GestorAutos gestorAutos;
     private VentanillaCobro ventanillaCobro ;
     // matriz del RK
-    private List<float[]> matriz;
+    private List<double[]> matriz;
     // TODO otras cosas
-    private Float dineroACobrar;
+    private Double dineroACobrar;
 
     private Long contadorAutosNoAtendidos = 0L;
-    private Float acumuladorGanancia = 0f;
-    private Float acumuladorTiempoEstacionamiento = 0f;
+    private Double acumuladorGanancia = 0.0;
+    private Double acumuladorTiempoEstacionamiento = 0.0;
 
     public ElementoListaDTO toDTO() {
         ElementoListaDTO dto = new ElementoListaDTO();
@@ -140,7 +140,7 @@ public class VectorEstado {
 
         vecInicial.nroIteracion = 1L;
         vecInicial.evento = Evento.INICIO_SIMULACION;
-        vecInicial.reloj = 0f;
+        vecInicial.reloj = 0.0;
 
         // parte de los generadores
         vecInicial.gestorLlegadas = new GestorLlegadas();
@@ -216,7 +216,7 @@ public class VectorEstado {
             // calcular tiempo del estacionamiento, obtener id de un sector libre,
             // asignar ese auto en ese sector libre, si llego a los 10 sectores ocupados entonces hay que actualizar
             // y poner que la playa esta ocupada.
-            Float tmpEstacionamiento = vector.gestorLlegadas.getTiempoEstacionamiento();
+            Double tmpEstacionamiento = vector.gestorLlegadas.getTiempoEstacionamiento();
             auto.setHoraFinEstado(vector.reloj + tmpEstacionamiento);
 
             Long idSectorLibre = vector.gestorSectores.buscarYOcuparLibre();
@@ -250,7 +250,7 @@ public class VectorEstado {
         // copiamos y hacemos clonacion del vector anterior.
         nuevoVec = obtenerCopia(prev);
 
-        CustomPair<Evento, Float> proxEvento = prev.decidirProximoEvento();
+        CustomPair<Evento, Double> proxEvento = prev.decidirProximoEvento();
         nuevoVec.nroIteracion = prev.nroIteracion+1;
         nuevoVec.reloj = proxEvento.getValue();
         nuevoVec.evento = proxEvento.getKey();
@@ -294,7 +294,7 @@ public class VectorEstado {
             nuevoVec.ventanillaCobro.setEstaLibre(true);
             // actualizar acumulador ganancia
             nuevoVec.acumuladorGanancia += nuevoVec.dineroACobrar;
-            nuevoVec.dineroACobrar = 0f;
+            nuevoVec.dineroACobrar = 0.0;
 
         } else {// camino dificil
             // actualizar estado auto
@@ -309,15 +309,15 @@ public class VectorEstado {
             Auto nuevoAut = nuevoVec.gestorAutos.buscarAutoPorId(idNuevoAuto);
 
             // calcular runge kutta y actualizar el estado del auto
-            Float paramD = (nuevoAut.getTipoAuto() == TiposAuto.GRANDE) ? 180f : 130f;
-            Float paramC = nuevoVec.ventanillaCobro.conseguirAutosEnCola().floatValue();
-            List<float[]> matriz = calcularYDevolverMatriz(paramD, paramC);
+            Double paramD = (nuevoAut.getTipoAuto() == TiposAuto.GRANDE) ? 180.0 : 130.0;
+            Double paramC = nuevoVec.ventanillaCobro.conseguirAutosEnCola().doubleValue();
+            List<double[]> matriz = calcularYDevolverMatriz(paramD, paramC);
             nuevoVec.matriz = matriz;
 
             // ahora hay que buscar el resultado en la matriz
             // eso nos va a dar el Xn que apunta al objetivo
             // el Xn+1 va a estar en el anteultimo elemento de la ultima fila de la lista.
-            Float Xn = matriz.get(matriz.size()-1)[7];
+            Double Xn = matriz.get(matriz.size()-1)[7];
             nuevoVec.ventanillaCobro.setValorRungeKutta(Xn);
             nuevoVec.ventanillaCobro.setEstaLibre(false);
             nuevoVec.ventanillaCobro.setFinCobroAuto(nuevoVec.reloj+Xn);
@@ -331,8 +331,8 @@ public class VectorEstado {
 
             nuevoVec.acumuladorGanancia += nuevoVec.dineroACobrar;
             /// TODO PROGRAMAR EL ACUMULADOR DE PLATA
-            float dinero = 0f;
-            float diferencia = aut.getHoraFinEstado() - aut.getHoraLlegada();
+            Double dinero = 0.0;
+            Double diferencia = aut.getHoraFinEstado() - aut.getHoraLlegada();
             if (aut.getTipoAuto() == TiposAuto.PEQUENIO){
                 dinero = (diferencia / 60f) * 300f;
             } else if (aut.getTipoAuto() == TiposAuto.GRANDE){
@@ -360,15 +360,15 @@ public class VectorEstado {
         // el proximo estado del auto depende del estado de la cola
         if (nuevoVec.ventanillaCobro.getEstaLibre()){
             // calcular runge kutta y actualizar el estado del auto
-            Float paramD = (aut.getTipoAuto() == TiposAuto.GRANDE) ? 180f : 130f;
-            Float paramC = nuevoVec.ventanillaCobro.conseguirAutosEnCola().floatValue();
-            List<float[]> matriz = calcularYDevolverMatriz(paramD, paramC);
+            Double paramD = (aut.getTipoAuto() == TiposAuto.GRANDE) ? 180.0 : 130.0;
+            Double paramC = nuevoVec.ventanillaCobro.conseguirAutosEnCola().doubleValue();
+            List<double[]> matriz = calcularYDevolverMatriz(paramD, paramC);
 
             nuevoVec.matriz = matriz;
             // ahora hay que buscar el resultado en la matriz
             // eso nos va a dar el Xn que apunta al objetivo
             // el Xn+1 va a estar en el anteultimo elemento de la ultima fila de la lista.
-            Float Xn = matriz.get(matriz.size()-1)[7];
+            Double Xn = matriz.get(matriz.size()-1)[7];
             nuevoVec.ventanillaCobro.setValorRungeKutta(Xn);
             nuevoVec.ventanillaCobro.setEstaLibre(false);
             nuevoVec.ventanillaCobro.setFinCobroAuto(nuevoVec.reloj+Xn);
@@ -378,8 +378,8 @@ public class VectorEstado {
 
             /// TODO PROGRAMAR EL ACUMULADOR DE PLATA
             /// necesito el auto, el acumulador, hora de inicio y hora de fin
-            float dinero = 0f;
-            float diferencia = aut.getHoraFinEstado() - aut.getHoraLlegada();
+            double dinero = 0f;
+            double diferencia = aut.getHoraFinEstado() - aut.getHoraLlegada();
             if (aut.getTipoAuto() == TiposAuto.PEQUENIO){
                 dinero = (diferencia / 60f) * 300f;
             } else if (aut.getTipoAuto() == TiposAuto.GRANDE){
@@ -407,8 +407,8 @@ public class VectorEstado {
     }
 
     //TODO
-    public CustomPair<Evento, Float> decidirProximoEvento(){
-        Float nextHora = 0f;
+    public CustomPair<Evento, Double> decidirProximoEvento(){
+        Double nextHora = 0.0;
         Evento nextEvento = Evento.FIN_SIMULACION;
 
         if (this.ventanillaCobro.getEstaLibre() && this.gestorAutos.estaVacia()){
@@ -424,10 +424,10 @@ public class VectorEstado {
             // de los autos
 
             // fin de estacionamiento mas cercano
-            Float horaAutoMasCercana = this.gestorAutos.horaMasCercana(this.reloj);
+            Double horaAutoMasCercana = this.gestorAutos.horaMasCercana(this.reloj);
 
             // llegada mas cercana
-            Float horaLlegadaAuto = gestorLlegadas.getHoraLlegadaAuto();
+            Double horaLlegadaAuto = gestorLlegadas.getHoraLlegadaAuto();
             if (horaLlegadaAuto < horaAutoMasCercana){
                 nextHora = horaLlegadaAuto;
                 nextEvento = Evento.LLEGADA_AUTO;
@@ -449,13 +449,13 @@ public class VectorEstado {
             // llegada prox auto,
             // fin de cobro
             /// fin de cobro estacionamiento
-            Float horaVentanilla = ventanillaCobro.getFinCobroAuto();
+            Double horaVentanilla = ventanillaCobro.getFinCobroAuto();
 
             /// fin de estacionamiento
-            Float finEstacionamiento = gestorAutos.horaMasCercana(this.reloj);
+            Double finEstacionamiento = gestorAutos.horaMasCercana(this.reloj);
 
             /// nueva llegada
-            Float horaNuevaLlegada = gestorLlegadas.getHoraLlegadaAuto();
+            Double horaNuevaLlegada = gestorLlegadas.getHoraLlegadaAuto();
 
 
             if(horaVentanilla < finEstacionamiento && horaVentanilla < horaNuevaLlegada && horaVentanilla > this.reloj){
@@ -475,7 +475,7 @@ public class VectorEstado {
         return new CustomPair<>(nextEvento, nextHora);
     }
 
-    public VectorEstado(Long nroIteracion, Evento evento, Float reloj, GestorLlegadas gestorLlegadas, Boolean esLibrePlaya, GestorSectores gestorSectores, GestorAutos gestorAutos, VentanillaCobro ventanillaCobro, Long contadorAutosNoAtendidos, Float acumuladorGanancia, Float acumuladorTiempoEstacionamiento) {
+    public VectorEstado(Long nroIteracion, Evento evento, Double reloj, GestorLlegadas gestorLlegadas, Boolean esLibrePlaya, GestorSectores gestorSectores, GestorAutos gestorAutos, VentanillaCobro ventanillaCobro, Long contadorAutosNoAtendidos, Double acumuladorGanancia, Double acumuladorTiempoEstacionamiento) {
         this.nroIteracion = nroIteracion;
         this.evento = evento;
         this.reloj = reloj;
@@ -506,11 +506,11 @@ public class VectorEstado {
         this.evento = evento;
     }
 
-    public Float getReloj() {
+    public Double getReloj() {
         return reloj;
     }
 
-    public void setReloj(Float reloj) {
+    public void setReloj(Double reloj) {
         this.reloj = reloj;
     }
 
@@ -554,11 +554,11 @@ public class VectorEstado {
         this.ventanillaCobro = ventanillaCobro;
     }
 
-    public List<float[]> getMatriz() {
+    public List<double[]> getMatriz() {
         return matriz;
     }
 
-    public void setMatriz(List<float[]> matriz) {
+    public void setMatriz(List<double[]> matriz) {
         this.matriz = matriz;
     }
 
@@ -570,27 +570,27 @@ public class VectorEstado {
         this.contadorAutosNoAtendidos = contadorAutosNoAtendidos;
     }
 
-    public Float getAcumuladorGanancia() {
+    public Double getAcumuladorGanancia() {
         return acumuladorGanancia;
     }
 
-    public void setAcumuladorGanancia(Float acumuladorGanancia) {
+    public void setAcumuladorGanancia(Double acumuladorGanancia) {
         this.acumuladorGanancia = acumuladorGanancia;
     }
 
-    public Float getAcumuladorTiempoEstacionamiento() {
+    public Double getAcumuladorTiempoEstacionamiento() {
         return acumuladorTiempoEstacionamiento;
     }
 
-    public void setAcumuladorTiempoEstacionamiento(Float acumuladorTiempoEstacionamiento) {
+    public void setAcumuladorTiempoEstacionamiento(Double acumuladorTiempoEstacionamiento) {
         this.acumuladorTiempoEstacionamiento = acumuladorTiempoEstacionamiento;
     }
 
-    public Float getDineroACobrar() {
+    public Double getDineroACobrar() {
         return dineroACobrar;
     }
 
-    public void setDineroACobrar(Float dineroACobrar) {
+    public void setDineroACobrar(Double dineroACobrar) {
         this.dineroACobrar = dineroACobrar;
     }
 }

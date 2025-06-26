@@ -14,7 +14,7 @@ public class SimulationController {
     public SimulationService simulationService;
 
     @GetMapping("/simular/{cantidadIteraciones}/{parametroT}/{saltoH}/{filaDesde}/{filaHasta}/")
-    public ResponseEntity<List<ElementoListaDTO>> Simular(@PathVariable Long cantidadIteraciones, @PathVariable Long parametroT, @PathVariable Float saltoH,
+    public ResponseEntity<List<ElementoListaDTO>> Simular(@PathVariable Long cantidadIteraciones, @PathVariable Long parametroT, @PathVariable Double saltoH,
                                     @PathVariable Long filaDesde, @PathVariable Long filaHasta){
         return ResponseEntity.ok(simulationService.iniciarSimulacion(cantidadIteraciones, parametroT, saltoH, filaDesde, filaHasta));
     }

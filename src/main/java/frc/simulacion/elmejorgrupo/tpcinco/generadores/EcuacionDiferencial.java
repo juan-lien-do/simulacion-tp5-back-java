@@ -2,5 +2,5 @@ package frc.simulacion.elmejorgrupo.tpcinco.generadores;
 
 @FunctionalInterface
 public interface EcuacionDiferencial {
-    float evaluar(float x, float y);
+    Double evaluar(Double x, Double y);
 }

@@ -8,13 +8,13 @@ import org.springframework.util.SerializationUtils;
 import java.io.Serializable;
 
 public class GestorLlegadas implements Serializable {
-    private Float rndLlegadaAuto;
-    private Float tiempoLlegadaAuto;
-    private Float horaLlegadaAuto;
-    private Float rndTipoAuto;
+    private Double rndLlegadaAuto;
+    private Double tiempoLlegadaAuto;
+    private Double horaLlegadaAuto;
+    private Double rndTipoAuto;
     private TiposAuto tipoAuto;
-    private Float rndTiempo;
-    private Float tiempoEstacionamiento;
+    private Double rndTiempo;
+    private Double tiempoEstacionamiento;
 
     @Override
     public GestorLlegadas clone(){
@@ -38,7 +38,7 @@ public class GestorLlegadas implements Serializable {
     }
 
     // llegada
-    public void calcularLlegada(Float reloj){
+    public void calcularLlegada(Double reloj){
         this.rndLlegadaAuto = GeneradorNumAleat.generarNumeroAleatorio();
         this.tiempoLlegadaAuto = Generador.generarTiempoLlegadaAuto(rndLlegadaAuto);
         this.horaLlegadaAuto = tiempoLlegadaAuto + reloj;
@@ -50,35 +50,35 @@ public class GestorLlegadas implements Serializable {
         this.tiempoEstacionamiento = Generador.generarTiempoEstacionamiento(rndTiempo);
     }
 
-    public Float getRndLlegadaAuto() {
+    public Double getRndLlegadaAuto() {
         return rndLlegadaAuto;
     }
 
-    public void setRndLlegadaAuto(Float rndLlegadaAuto) {
+    public void setRndLlegadaAuto(Double rndLlegadaAuto) {
         this.rndLlegadaAuto = rndLlegadaAuto;
     }
 
-    public Float getTiempoLlegadaAuto() {
+    public Double getTiempoLlegadaAuto() {
         return tiempoLlegadaAuto;
     }
 
-    public void setTiempoLlegadaAuto(Float tiempoLlegadaAuto) {
+    public void setTiempoLlegadaAuto(Double tiempoLlegadaAuto) {
         this.tiempoLlegadaAuto = tiempoLlegadaAuto;
     }
 
-    public Float getHoraLlegadaAuto() {
+    public Double getHoraLlegadaAuto() {
         return horaLlegadaAuto;
     }
 
-    public void setHoraLlegadaAuto(Float horaLlegadaAuto) {
+    public void setHoraLlegadaAuto(Double horaLlegadaAuto) {
         this.horaLlegadaAuto = horaLlegadaAuto;
     }
 
-    public Float getRndTipoAuto() {
+    public Double getRndTipoAuto() {
         return rndTipoAuto;
     }
 
-    public void setRndTipoAuto(Float rndTipoAuto) {
+    public void setRndTipoAuto(Double rndTipoAuto) {
         this.rndTipoAuto = rndTipoAuto;
     }
 
@@ -90,26 +90,26 @@ public class GestorLlegadas implements Serializable {
         this.tipoAuto = tipoAuto;
     }
 
-    public Float getRndTiempo() {
+    public Double getRndTiempo() {
         return rndTiempo;
     }
 
-    public void setRndTiempo(Float rndTiempo) {
+    public void setRndTiempo(Double rndTiempo) {
         this.rndTiempo = rndTiempo;
     }
 
-    public Float getTiempoEstacionamiento() {
+    public Double getTiempoEstacionamiento() {
         return tiempoEstacionamiento;
     }
 
-    public void setTiempoEstacionamiento(Float tiempoEstacionamiento) {
+    public void setTiempoEstacionamiento(Double tiempoEstacionamiento) {
         this.tiempoEstacionamiento = tiempoEstacionamiento;
     }
 
     public GestorLlegadas() {
     }
 
-    public GestorLlegadas(Float rndLlegadaAuto, Float tiempoLlegadaAuto, Float horaLlegadaAuto, Float rndTipoAuto, TiposAuto tipoAuto, Float rndTiempo, Float tiempoEstacionamiento) {
+    public GestorLlegadas(Double rndLlegadaAuto, Double tiempoLlegadaAuto, Double horaLlegadaAuto, Double rndTipoAuto, TiposAuto tipoAuto, Double rndTiempo, Double tiempoEstacionamiento) {
         this.rndLlegadaAuto = rndLlegadaAuto;
         this.tiempoLlegadaAuto = tiempoLlegadaAuto;
         this.horaLlegadaAuto = horaLlegadaAuto;

@@ -4,8 +4,8 @@ public class AutoDTO {
     private Long id;
     private String estadoAuto;
     private String tipoAuto;
-    private Float horaInicioEstacionamiento;
-    private Float horaFinEstacionamiento;
+    private Double horaInicioEstacionamiento;
+    private Double horaFinEstacionamiento;
     private Long idSector;
 
     public Long getId() {
@@ -32,19 +32,19 @@ public class AutoDTO {
         this.tipoAuto = tipoAuto;
     }
 
-    public Float getHoraFinEstacionamiento() {
+    public Double getHoraFinEstacionamiento() {
         return horaFinEstacionamiento;
     }
 
-    public Float getHoraInicioEstacionamiento() {
+    public Double getHoraInicioEstacionamiento() {
         return horaInicioEstacionamiento;
     }
 
-    public void setHoraInicioEstacionamiento(Float horaInicioEstacionamiento) {
+    public void setHoraInicioEstacionamiento(Double horaInicioEstacionamiento) {
         this.horaInicioEstacionamiento = horaInicioEstacionamiento;
     }
 
-    public void setHoraFinEstacionamiento(Float horaFinEstacionamiento) {
+    public void setHoraFinEstacionamiento(Double horaFinEstacionamiento) {
         this.horaFinEstacionamiento = horaFinEstacionamiento;
     }
 

@@ -11,28 +11,28 @@ import java.util.List;
  */
 public class SolucionadorRK4 {
 
-    public List<float[]> resolverHastaValor(EcuacionDiferencial ecuacion, float x_inicial, float y_inicial, float y_meta, float h) {
-        List<float[]> matriz = new ArrayList<>();
+    public List<double[]> resolverHastaValor(EcuacionDiferencial ecuacion, Double x_inicial, Double y_inicial, Double y_meta, Double h) {
+        List<double[]> matriz = new ArrayList<>();
 
 
 
-        float y_actual = y_inicial;
-        float x_actual = x_inicial;
+        Double y_actual = y_inicial;
+        Double x_actual = x_inicial;
         int paso = 0;
         final int MAX_PASOS = 10000;
 
         while (y_actual < y_meta && paso < MAX_PASOS) {
 
-            float k1 = ecuacion.evaluar(x_actual, y_actual);
-            float k2 = ecuacion.evaluar((float) (x_actual + 0.5 * h), (float) (y_actual + 0.5 * h * k1));
-            float k3 = ecuacion.evaluar((float) (x_actual + 0.5 * h), (float) (y_actual + 0.5 * h * k2));
-            float k4 = ecuacion.evaluar(x_actual + h, y_actual + h * k3);
+            Double k1 = ecuacion.evaluar(x_actual, y_actual);
+            Double k2 = ecuacion.evaluar((Double) (x_actual + 0.5 * h), (Double) (y_actual + 0.5 * h * k1));
+            Double k3 = ecuacion.evaluar((Double) (x_actual + 0.5 * h), (Double) (y_actual + 0.5 * h * k2));
+            Double k4 = ecuacion.evaluar(x_actual + h, y_actual + h * k3);
 
-            float incremento_y = (float) ((h / 6.0) * (k1 + 2.0 * k2 + 2.0 * k3 + k4));
-            float y_siguiente = y_actual + incremento_y;
+            Double incremento_y = (Double) ((h / 6.0) * (k1 + 2.0 * k2 + 2.0 * k3 + k4));
+            Double y_siguiente = y_actual + incremento_y;
 
-            float[] arrayFila = new float[9];
-            arrayFila[0] = paso;
+            double[] arrayFila = new double[9];
+            arrayFila[0] = (double) paso;
             arrayFila[1] = x_actual;
             arrayFila[2] = y_actual;
             arrayFila[3] = k1;

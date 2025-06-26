@@ -9,16 +9,16 @@ import java.util.List;
 public class ElementoListaDTO {
     private Long nroIteracion;
     private String evento;
-    private Float reloj;
+    private Double reloj;
     private Boolean esLibre;
-    private Float rndLlegadaAuto;
-    private Float tiempoLlegadaAuto;
-    private Float horaLlegadaAuto;
-    private Float rndTipoAuto;
+    private Double rndLlegadaAuto;
+    private Double tiempoLlegadaAuto;
+    private Double horaLlegadaAuto;
+    private Double rndTipoAuto;
     private String tipoAuto;
-    private Float rndTiempo;
-    private Float tiempoEstacionamiento;
-    private List<float[]> matriz;
+    private Double rndTiempo;
+    private Double tiempoEstacionamiento;
+    private List<double[]> matriz;
 
     private List<SectorDTO> sectorDTOS;
     private List<AutoDTO> autoDTOS;
@@ -26,13 +26,13 @@ public class ElementoListaDTO {
 
     private Long autosEnCola;
     private Boolean estaLibre;
-    private Float valorRungeKutta;
-    private Float finCobroAuto;
-    private Float dineroACobrar;
+    private Double valorRungeKutta;
+    private Double finCobroAuto;
+    private Double dineroACobrar;
 
     private Long contadorAutosNoAtendidos;
-    private Float acumuladorGanancia;
-    private Float acumuladorTiempoEstacionamiento;
+    private Double acumuladorGanancia;
+    private Double acumuladorTiempoEstacionamiento;
 
     public Long getNroIteracion() {
         return nroIteracion;
@@ -50,11 +50,11 @@ public class ElementoListaDTO {
         this.evento = evento;
     }
 
-    public Float getReloj() {
+    public Double getReloj() {
         return reloj;
     }
 
-    public void setReloj(Float reloj) {
+    public void setReloj(Double reloj) {
         this.reloj = reloj;
     }
 
@@ -66,35 +66,35 @@ public class ElementoListaDTO {
         this.esLibre = esLibre;
     }
 
-    public Float getRndLlegadaAuto() {
+    public Double getRndLlegadaAuto() {
         return rndLlegadaAuto;
     }
 
-    public void setRndLlegadaAuto(Float rndLlegadaAuto) {
+    public void setRndLlegadaAuto(Double rndLlegadaAuto) {
         this.rndLlegadaAuto = rndLlegadaAuto;
     }
 
-    public Float getTiempoLlegadaAuto() {
+    public Double getTiempoLlegadaAuto() {
         return tiempoLlegadaAuto;
     }
 
-    public void setTiempoLlegadaAuto(Float tiempoLlegadaAuto) {
+    public void setTiempoLlegadaAuto(Double tiempoLlegadaAuto) {
         this.tiempoLlegadaAuto = tiempoLlegadaAuto;
     }
 
-    public Float getHoraLlegadaAuto() {
+    public Double getHoraLlegadaAuto() {
         return horaLlegadaAuto;
     }
 
-    public void setHoraLlegadaAuto(Float horaLlegadaAuto) {
+    public void setHoraLlegadaAuto(Double horaLlegadaAuto) {
         this.horaLlegadaAuto = horaLlegadaAuto;
     }
 
-    public Float getRndTipoAuto() {
+    public Double getRndTipoAuto() {
         return rndTipoAuto;
     }
 
-    public void setRndTipoAuto(Float rndTipoAuto) {
+    public void setRndTipoAuto(Double rndTipoAuto) {
         this.rndTipoAuto = rndTipoAuto;
     }
 
@@ -106,27 +106,27 @@ public class ElementoListaDTO {
         this.tipoAuto = tipoAuto;
     }
 
-    public Float getRndTiempo() {
+    public Double getRndTiempo() {
         return rndTiempo;
     }
 
-    public void setRndTiempo(Float rndTiempo) {
+    public void setRndTiempo(Double rndTiempo) {
         this.rndTiempo = rndTiempo;
     }
 
-    public Float getTiempoEstacionamiento() {
+    public Double getTiempoEstacionamiento() {
         return tiempoEstacionamiento;
     }
 
-    public void setTiempoEstacionamiento(Float tiempoEstacionamiento) {
+    public void setTiempoEstacionamiento(Double tiempoEstacionamiento) {
         this.tiempoEstacionamiento = tiempoEstacionamiento;
     }
 
-    public List<float[]> getMatriz() {
+    public List<double[]> getMatriz() {
         return matriz;
     }
 
-    public void setMatriz(List<float[]> matriz) {
+    public void setMatriz(List<double[]> matriz) {
         this.matriz = matriz;
     }
 
@@ -162,19 +162,19 @@ public class ElementoListaDTO {
         this.estaLibre = estaLibre;
     }
 
-    public Float getValorRungeKutta() {
+    public Double getValorRungeKutta() {
         return valorRungeKutta;
     }
 
-    public void setValorRungeKutta(Float valorRungeKutta) {
+    public void setValorRungeKutta(Double valorRungeKutta) {
         this.valorRungeKutta = valorRungeKutta;
     }
 
-    public Float getFinCobroAuto() {
+    public Double getFinCobroAuto() {
         return finCobroAuto;
     }
 
-    public void setFinCobroAuto(Float finCobroAuto) {
+    public void setFinCobroAuto(Double finCobroAuto) {
         this.finCobroAuto = finCobroAuto;
     }
 
@@ -186,27 +186,27 @@ public class ElementoListaDTO {
         this.contadorAutosNoAtendidos = contadorAutosNoAtendidos;
     }
 
-    public Float getAcumuladorGanancia() {
+    public Double getAcumuladorGanancia() {
         return acumuladorGanancia;
     }
 
-    public void setAcumuladorGanancia(Float acumuladorGanancia) {
+    public void setAcumuladorGanancia(Double acumuladorGanancia) {
         this.acumuladorGanancia = acumuladorGanancia;
     }
 
-    public Float getAcumuladorTiempoEstacionamiento() {
+    public Double getAcumuladorTiempoEstacionamiento() {
         return acumuladorTiempoEstacionamiento;
     }
 
-    public void setAcumuladorTiempoEstacionamiento(Float acumuladorTiempoEstacionamiento) {
+    public void setAcumuladorTiempoEstacionamiento(Double acumuladorTiempoEstacionamiento) {
         this.acumuladorTiempoEstacionamiento = acumuladorTiempoEstacionamiento;
     }
 
-    public Float getDineroACobrar() {
+    public Double getDineroACobrar() {
         return dineroACobrar;
     }
 
-    public void setDineroACobrar(Float dineroACobrar) {
+    public void setDineroACobrar(Double dineroACobrar) {
         this.dineroACobrar = dineroACobrar;
     }
 

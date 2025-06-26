@@ -15,8 +15,8 @@ public class Auto implements Serializable {
     private Long id;
     private TiposAuto tipoAuto;
     private WrapperEstadoAuto estadoAuto;
-    private Float horaLlegada;
-    private Float horaFinEstado;
+    private Double horaLlegada;
+    private Double horaFinEstado;
 
     public static Long generarId(){
         return proximaId++;
@@ -35,7 +35,7 @@ public class Auto implements Serializable {
     }
 
     // para generar nuevo evento
-    public boolean sePuedeTenerEnCuenta(Float rel){
+    public boolean sePuedeTenerEnCuenta(Double rel){
         return (estadoAuto.estoyEnSector() || estadoAuto.estoyEnCobro()) && this.getHoraFinEstado() > rel;
     }
 
@@ -55,11 +55,11 @@ public class Auto implements Serializable {
         this.estadoAuto = estadoAuto;
     }
 
-    public Float getHoraFinEstado() {
+    public Double getHoraFinEstado() {
         return horaFinEstado;
     }
 
-    public void setHoraFinEstado(Float horaFinEstado) {
+    public void setHoraFinEstado(Double horaFinEstado) {
         this.horaFinEstado = horaFinEstado;
     }
 
@@ -71,11 +71,11 @@ public class Auto implements Serializable {
         this.tipoAuto = tipoAuto;
     }
 
-    public Float getHoraLlegada() {
+    public Double getHoraLlegada() {
         return horaLlegada;
     }
 
-    public void setHoraLlegada(Float horaLlegada) {
+    public void setHoraLlegada(Double horaLlegada) {
         this.horaLlegada = horaLlegada;
     }
 }
