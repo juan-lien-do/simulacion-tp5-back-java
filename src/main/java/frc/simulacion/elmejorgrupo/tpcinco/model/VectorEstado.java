@@ -82,6 +82,7 @@ public class VectorEstado {
             List<AutoDTO> autosDTO = this.gestorAutos.getAutos().stream()
                     .map(auto -> {
                         AutoDTO autoDTO = new AutoDTO();
+                        autoDTO.setHoraInicioEstacionamiento(auto.getHoraLlegada());
                         autoDTO.setId(auto.getId());
                         autoDTO.setTipoAuto(auto.getTipoAuto() != null ? auto.getTipoAuto().name() : null);
                         autoDTO.setEstadoAuto(auto.getEstadoAuto() != null ? auto.getEstadoAuto().getEstadoAuto().name() : null);
